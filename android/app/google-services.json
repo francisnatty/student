@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "99637816619",
+    "project_id": "studentric-app",
+    "storage_bucket": "studentric-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99637816619:android:87f3b41b3f7cda4b79e96e",
+        "android_client_info": {
+          "package_name": "com.studentcentric.studentcentric"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABoiJE2-urMz5Yvukh05a_2vaXcRzlMtY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
