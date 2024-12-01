@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter/foundation.dart'; // For kDebugMode
 
@@ -33,8 +34,8 @@ class ApiService {
     BaseOptions options = BaseOptions(
       baseUrl: baseUrl,
       headers: headers,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
+      connectTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 60),
     );
 
     _dio = Dio(options);
@@ -51,6 +52,7 @@ class ApiService {
         return handler.next(response);
       },
       onError: (DioError error, handler) {
+        debugPrint("error here => ${error.toString()}");
         _logError(error);
         _processError(error);
         return handler.next(error);
@@ -388,15 +390,15 @@ class ApiService {
         } else if (error.type == DioErrorType.receiveTimeout) {
           errorMessage = "Receive timed out";
         } else if (error.type == DioErrorType.badResponse) {
-          errorMessage = error.response?.statusCode != null
-              ? "Received status code: ${error.response!.statusCode}"
+          debugPrint("derey here =>  ${error.response?.data['msg']??''}");
+          errorMessage = error.response?.data != null
+              ? "${error.response?.data['msg']??''}"
               : "Bad response from server";
         } else if (error.type == DioErrorType.cancel) {
           errorMessage = "Request was cancelled";
         } else if (error.type == DioErrorType.unknown) {
           errorMessage = "No internet connection";
         }
-
         onError!(errorMessage);
       } catch (e) {
         // In case of any parsing errors, use a generic message

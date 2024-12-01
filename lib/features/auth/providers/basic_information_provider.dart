@@ -22,7 +22,7 @@ class BasicInformationProvider with ChangeNotifier {
   String? _countriesError;
 
   // Cities data
-  List<City> _cities = [];
+  List<States> _cities = [];
   bool _isCitiesLoading = false;
   String? _citiesError;
 
@@ -58,7 +58,7 @@ class BasicInformationProvider with ChangeNotifier {
   bool get isCountriesLoading => _isCountriesLoading;
   String? get countriesError => _countriesError;
 
-  List<City> get cities => _cities;
+  List<States> get cities => _cities;
   bool get isCitiesLoading => _isCitiesLoading;
   String? get citiesError => _citiesError;
 
@@ -141,28 +141,29 @@ class BasicInformationProvider with ChangeNotifier {
   }
 
   /// Fetch Cities based on Country ID
-  Future<void> fetchCities(int countryId) async {
-    _isCitiesLoading = true;
+  Future<void> fetchCities({required Country selectedCountry}) async {
+    //_isCitiesLoading = true;
     _citiesError = null;
-    _cities = [];
+    _cities = selectedCountry.states??[];
+    debugPrint("cities is ==> ${_cities.first.name}");
     notifyListeners();
 
-    try {
-      final response = await ApiService.instance
-          .get('/datas/fetch/citiesPerCountry/$countryId');
-
-      if (response != null && response.statusCode == 200) {
-        final data = response.data['data'] as List;
-        _cities = data.map((json) => City.fromJson(json)).toList();
-      } else {
-        _citiesError = response?.data['msg'] ?? 'Failed to fetch cities.';
-      }
-    } catch (e) {
-      _citiesError = 'An error occurred while fetching cities.';
-    } finally {
-      _isCitiesLoading = false;
-      notifyListeners();
-    }
+    // try {
+    //   final response = await ApiService.instance
+    //       .get('/datas/fetch/citiesPerCountry/$countryId');
+    //
+    //   if (response != null && response.statusCode == 200) {
+    //     final data = response.data['data'] as List;
+    //     _cities = data.map((json) => States.fromJson(json)).toList();
+    //   } else {
+    //     _citiesError = response?.data['msg'] ?? 'Failed to fetch cities.';
+    //   }
+    // } catch (e) {
+    //   _citiesError = 'An error occurred while fetching cities.';
+    // } finally {
+    //   _isCitiesLoading = false;
+    //   notifyListeners();
+    // }
   }
 
   /// Fetch Schools
@@ -197,7 +198,7 @@ class BasicInformationProvider with ChangeNotifier {
 
     try {
       final response = await ApiService.instance
-          .get('/datas/fetch/schools/$schoolId/program-types');
+          .get('/datas/fetch/program-types');
 
       if (response != null && response.statusCode == 200) {
         final data = response.data['data'] as List;
@@ -223,7 +224,7 @@ class BasicInformationProvider with ChangeNotifier {
 
     try {
       final response = await ApiService.instance.get(
-          '/datas/fetch/schools/$schoolId/program-types/$programTypeId/courses');
+          '/datas/fetch/schools/courses');
 
       if (response != null && response.statusCode == 200) {
         final data = response.data['data'] as List;

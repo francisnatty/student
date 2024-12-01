@@ -89,7 +89,7 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Consumer<ChatProvider>(
                 builder: (context, chatProvider, child) {
                   if (chatProvider.isLoading) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (chatProvider.errorMessage != null) {
                     return Center(
                       child: Text(
@@ -122,10 +122,8 @@ class _ChatScreenState extends State<ChatScreen> {
                           },
                           child: ChatListTile(
                             name: _getUserName(chatUser),
-                            message:
-                                "Hello!", // Placeholder, replace with actual data
-                            time:
-                                "Now", // Placeholder, replace with actual data
+                            message: "Hello!", // Placeholder, replace with actual data
+                            time: "Now", // Placeholder, replace with actual data
                             // Removed imageUrl since we're not using it
                           ),
                         );
@@ -158,12 +156,12 @@ class ChatListTile extends StatelessWidget {
   // final String imageUrl;
 
   const ChatListTile({
-    Key? key,
+    super.key,
     required this.name,
     required this.message,
     required this.time,
     // this.imageUrl, // Removed
-  }) : super(key: key);
+  });
 
   // Method to generate initials from the name
   String _getInitials(String name) {

@@ -16,7 +16,7 @@ class SelectBottomSheet extends StatefulWidget {
   final ValueChanged<String>? onSelected; // Added onSelected callback
 
   const SelectBottomSheet({
-    Key? key,
+    super.key,
     this.label,
     required this.hintText,
     required this.items,
@@ -24,7 +24,7 @@ class SelectBottomSheet extends StatefulWidget {
     this.controller,
     this.isLoading = false,
     this.onSelected,
-  }) : super(key: key);
+  });
 
   @override
   _SelectBottomSheetState createState() => _SelectBottomSheetState();
@@ -90,7 +90,7 @@ class _SelectBottomSheetState extends State<SelectBottomSheet> {
                       color: Colors.black,
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   GestureDetector(
                     onTap: () {
                       Navigator.pop(context);
@@ -98,7 +98,7 @@ class _SelectBottomSheetState extends State<SelectBottomSheet> {
                     child: CircleAvatar(
                       backgroundColor: AppColors.greyAlt,
                       radius: 24.r,
-                      child: Icon(
+                      child: const Icon(
                         Icons.clear,
                         color: Colors.black,
                       ),
@@ -110,7 +110,7 @@ class _SelectBottomSheetState extends State<SelectBottomSheet> {
               // List of items
               Expanded(
                 child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemCount: widget.items.length,
                   itemBuilder: (context, index) {
                     final item = widget.items[index];
@@ -150,7 +150,7 @@ class _SelectBottomSheetState extends State<SelectBottomSheet> {
                               ),
                             ),
                             if (isSelected)
-                              Icon(
+                              const Icon(
                                 Icons.check,
                                 color: Colors.white,
                               ),
@@ -183,7 +183,7 @@ class _SelectBottomSheetState extends State<SelectBottomSheet> {
               height: 24.h,
               child: Transform.scale(
                 scale: 0.5,
-                child: CircularProgressIndicator(
+                child: const CircularProgressIndicator(
                   strokeWidth: 2.5,
                   valueColor: AlwaysStoppedAnimation<Color>(
                     AppColors.primaryColor,
@@ -191,7 +191,7 @@ class _SelectBottomSheetState extends State<SelectBottomSheet> {
                 ),
               ),
             )
-          : Icon(
+          : const Icon(
               Icons.keyboard_arrow_down_outlined,
               color: Colors.black,
             ),

@@ -169,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   fontSize: 14.sp,
                                   color: AppColors.greyOne,
                                 ), // Default font size and color
-                                children: [
+                                children: const [
                                   TextSpan(
                                     text: 'Don’t have an account?',
                                   ),

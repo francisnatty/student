@@ -133,13 +133,13 @@ class MyApp extends StatelessWidget {
               // Set your Google Font here
               Theme.of(context).textTheme,
             ),
-            colorScheme: ColorScheme.fromSeed(seedColor: Color(0xFF0E48FB)),
+            colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0E48FB)),
             useMaterial3: true,
           ),
           home: child,
         );
       },
-      child: OnboardingScreen(),
+      child: const OnboardingScreen(),
     );
   }
 }

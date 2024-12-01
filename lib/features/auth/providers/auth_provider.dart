@@ -60,7 +60,7 @@ class AuthProvider extends ChangeNotifier {
       _email = email;
       CustomBottomSheet.show(
         context: context,
-        content: EmailOtpVerification(),
+        content: const EmailOtpVerification(),
       );
       notifyListeners();
       // Additional logic if needed
@@ -121,7 +121,7 @@ class AuthProvider extends ChangeNotifier {
       );
 
       if (response != null && response.statusCode == 200) {
-        context.push(EnterPhoneNumberScreen());
+        context.push(const EnterPhoneNumberScreen());
         notifyListeners();
         // Navigate to phone number entry screen
       } else if (response != null && response.statusCode == 400) {
@@ -314,7 +314,7 @@ class AuthProvider extends ChangeNotifier {
           (p0) => false,
         );
 
-        final FlutterSecureStorage _storage = const FlutterSecureStorage();
+        const FlutterSecureStorage _storage = FlutterSecureStorage();
 
         await _storage.write(key: 'access_token', value: _accessToken);
         print("LOGIN SUCCESSFUL");
@@ -381,7 +381,7 @@ class AuthProvider extends ChangeNotifier {
       );
 
       if (response != null && response.statusCode == 200) {
-        context.push(ChangePasswordScreen());
+        context.push(const ChangePasswordScreen());
         notifyListeners();
         // Navigate to phone number entry screen
       } else if (response != null && response.statusCode == 400) {
@@ -477,7 +477,7 @@ class AuthProvider extends ChangeNotifier {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
               );
             },
           ),

@@ -65,36 +65,36 @@ class ProgramType {
 
 class Course {
   final int id;
-  final int programTypeId;
-  final int schoolId;
+  //final int programTypeId;
+  //final int schoolId;
   final String courseName;
   final int status;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  //final DateTime? createdAt;
+  //final DateTime? updatedAt;
 
   Course({
     required this.id,
-    required this.programTypeId,
-    required this.schoolId,
+    //required this.programTypeId,
+    //required this.schoolId,
     required this.courseName,
     required this.status,
-    this.createdAt,
-    this.updatedAt,
+    // this.createdAt,
+    // this.updatedAt,
   });
 
   factory Course.fromJson(Map<String, dynamic> json) {
     return Course(
       id: json['id'],
-      programTypeId: json['programType_id'],
-      schoolId: json['school_id'],
+      //programTypeId: json['programType_id'],
+      //schoolId: json['school_id'],
       courseName: json['courseName'],
       status: json['status'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
-          : null,
+      // createdAt: json['created_at'] != null
+      //     ? DateTime.parse(json['created_at'])
+      //     : null,
+      // updatedAt: json['updated_at'] != null
+      //     ? DateTime.parse(json['updated_at'])
+      //     : null,
     );
   }
 }
@@ -104,16 +104,16 @@ class Year {
   final int courseId;
   final String name;
   final int status;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
+  //final DateTime? createdAt;
+  //final DateTime? updatedAt;
 
   Year({
     required this.id,
     required this.courseId,
     required this.name,
     required this.status,
-    this.createdAt,
-    this.updatedAt,
+   // this.createdAt,
+    //this.updatedAt,
   });
 
   factory Year.fromJson(Map<String, dynamic> json) {
@@ -122,12 +122,12 @@ class Year {
       courseId: json['course_id'],
       name: json['name'],
       status: json['status'],
-      createdAt: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
-          : null,
-      updatedAt: json['updated_at'] != null
-          ? DateTime.parse(json['updated_at'])
-          : null,
+      // createdAt: json['created_at'] != null
+      //     ? DateTime.parse(json['created_at'])
+      //     : null,
+      // updatedAt: json['updated_at'] != null
+      //     ? DateTime.parse(json['updated_at'])
+      //     : null,
     );
   }
 }

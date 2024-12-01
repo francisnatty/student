@@ -52,13 +52,15 @@ class _AddressInputScreenState extends State<AddressInputScreen> {
 
     // Find the selected country object
     final selectedCountry = provider.countries.firstWhere(
-      (country) => country.countryName == selectedCountryName,
+      (country) => country.name == selectedCountryName,
     );
 
     if (selectedCountry != null) {
       // Fetch cities for the selected country
-      provider.fetchCities(selectedCountry.id);
+      provider.fetchCities(selectedCountry:selectedCountry);
+      debugPrint("get cities from county ${selectedCountry.name}");
       // Clear the city selection
+
       cityController.text = '';
     }
   }
@@ -87,7 +89,7 @@ class _AddressInputScreenState extends State<AddressInputScreen> {
                 label: "Country",
                 hintText: "Select Country",
                 items: pageProvider.countries
-                    .map((country) => country.countryName)
+                    .map((country) => country.name??'')
                     .toList(),
                 title: "Select Country",
                 controller: countryController,
@@ -98,8 +100,7 @@ class _AddressInputScreenState extends State<AddressInputScreen> {
               SelectBottomSheet(
                 label: "City",
                 hintText: "Select City",
-                items:
-                    pageProvider.cities.map((city) => city.cityName).toList(),
+                items: pageProvider.cities.map((city) => city.name??'').toList(),
                 title: "Select City",
                 controller: cityController,
                 isLoading: pageProvider.isCitiesLoading,
