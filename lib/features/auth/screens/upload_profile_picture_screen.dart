@@ -5,16 +5,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/storage/secure_store.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/features/auth/providers/auth_provider.dart';
-import 'package:student_centric_app/features/auth/screens/success_screen.dart';
 import 'package:student_centric_app/features/auth/widgets/auth_appbar.dart';
-import 'package:student_centric_app/features/dashboard/screens/dashboard_screen.dart';
 import 'package:student_centric_app/widgets/app_button.dart';
 import 'package:student_centric_app/widgets/padding_widget.dart';
+
+import 'login_screen.dart';
 
 class UploadProfilePictureScreen extends StatefulWidget {
   const UploadProfilePictureScreen({super.key});
@@ -60,7 +59,7 @@ class _UploadProfilePictureScreenState
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
-      appBar: AuthAppbar(),
+      appBar: const AuthAppbar(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,36 +84,58 @@ class _UploadProfilePictureScreenState
                     : null,
               ),
             ),
-            20.verticalSpace,
+            140.verticalSpace,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+              child: AppButton.primary(
+                isLoading: authProvider.isLoading,
+                isActive: true,
+                text: _imageFile == null ? "Add Picture" : "Proceed",
+                onPressed: () async {
+                  print('dresak');
+                  if (_imageFile == null) {
+                    print("Here");
+                    _pickImage();
+                  } else {
+                    print("Here2");
+                    final authProvider =
+                    Provider.of<AuthProvider>(context, listen: false);
+                    final storage = SecureStorage();
+                    String? email = await storage.get(key: 'email')??'test@gmail.com';
+                    debugPrint("email is $email");
+
+                    await authProvider.uploadProfilePicture(
+                      email: email,
+                      profileImage: _imageFile!,
+                      context: context,
+                    );
+
+                  }
+                },
+              ),
+            ),
+            10.verticalSpace,
+
+          Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
+              child: AppButton.primary(
+                isLoading: false,
+                text: 'Skip',
+                isActive: true,
+                backgroundColor: Colors.white,
+                textColor: AppColors.primaryColor,
+                onPressed: (){
+                  print("deana");
+                  debugPrint("delay ===> ");
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  );
+                },
+              ),
+            ),
           ],
         ).padHorizontal,
-      ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
-        child: AppButton.primary(
-          isLoading: authProvider.isLoading,
-          text: _imageFile == null ? "Add Picture" : "Proceed",
-          onPressed: () async {
-            if (_imageFile == null) {
-              print("Here");
-              _pickImage();
-            } else {
-              print("Here2");
-
-              final authProvider =
-                  Provider.of<AuthProvider>(context, listen: false);
-
-              final storage = SecureStorage();
-              String? email = await storage.get(key: 'email');
-
-              await authProvider.uploadProfilePicture(
-                email: email!,
-                profileImage: _imageFile!,
-                context: context,
-              );
-            }
-          },
-        ),
       ),
     );
   }

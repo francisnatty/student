@@ -5,13 +5,19 @@ import 'package:flutter_svg/svg.dart';
 // Removed the SVG import since it's no longer needed for the avatar
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/features/chats/models/chat_user.dart';
+import 'package:student_centric_app/features/chats/module/chat_option.dart';
 import 'package:student_centric_app/features/chats/providers/chat_provider.dart';
 import 'package:student_centric_app/features/chats/screens/individual_chat_screen.dart';
 import 'package:student_centric_app/widgets/app_textfield.dart';
+
+import '../../../core/utils/bottom_sheets.dart';
+import '../../auth/providers/auth_provider.dart';
+import '../../auth/widgets/otp_verification.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -88,9 +94,10 @@ class _ChatScreenState extends State<ChatScreen> {
             Expanded(
               child: Consumer<ChatProvider>(
                 builder: (context, chatProvider, child) {
-                  if (chatProvider.isLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (chatProvider.errorMessage != null) {
+                  // if (chatProvider.isLoading) {
+                  //   return const Center(child: CircularProgressIndicator());
+                  // }
+                  if (chatProvider.errorMessage != null) {
                     return Center(
                       child: Text(
                         chatProvider.errorMessage!,
@@ -105,29 +112,43 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     );
                   } else {
-                    return ListView.builder(
-                      itemCount: chatProvider.chats.length,
-                      itemBuilder: (context, index) {
-                        final ChatUser chatUser = chatProvider.chats[index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => IndividualChatScreen(
-                                  chatUser: chatUser,
+                    return Skeletonizer(
+                      enabled: chatProvider.isLoading,
+                      ignoreContainers: true,
+                      child: ListView.builder(
+                        itemCount: chatProvider.chats.length,
+                        itemBuilder: (context, index) {
+                          final ChatUser chatUser = chatProvider.chats[index];
+                          return GestureDetector(
+                            onTap: () {
+                              var authProvider = Provider.of<AuthProvider>(
+                                      context,
+                                      listen: false)
+                                  .user;
+                              int senderId = authProvider?.id ?? 0;
+                              Provider.of<ChatProvider>(context, listen: false)
+                                  .fetchConversation(
+                                      messageId: "${senderId}_${chatUser.id}");
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => IndividualChatScreen(
+                                    chatUser: chatUser,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: ChatListTile(
-                            name: _getUserName(chatUser),
-                            message: "Hello!", // Placeholder, replace with actual data
-                            time: "Now", // Placeholder, replace with actual data
-                            // Removed imageUrl since we're not using it
-                          ),
-                        );
-                      },
+                              );
+                            },
+                            child: ChatListTile(
+                              name: _getUserName(chatUser),
+                              message:
+                                  "Hello!", // Placeholder, replace with actual data
+                              time:
+                                  "Now", // Placeholder, replace with actual data
+                              // Removed imageUrl since we're not using it
+                            ),
+                          );
+                        },
+                      ),
                     );
                   }
                 },
@@ -208,7 +229,14 @@ class ChatListTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          SvgPicture.asset(AppAssets.moreHoriz),
+          GestureDetector(
+              onTap: () {
+                CustomBottomSheet.show(
+                  context: context,
+                  content: const ChatOption(),
+                );
+              },
+              child: SvgPicture.asset(AppAssets.moreHoriz)),
           Text(
             time,
             style: TextStyle(

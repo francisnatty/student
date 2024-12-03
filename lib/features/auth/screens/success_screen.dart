@@ -71,7 +71,7 @@ class SuccessScreen extends StatelessWidget {
                   text: buttonText,
                   onPressed: onPressed ??
                       () {
-                        context.push(DashboardScreen());
+                        context.push(const DashboardScreen());
                       },
                 ),
               ],

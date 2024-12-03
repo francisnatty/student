@@ -174,7 +174,7 @@ class AuthProvider extends ChangeNotifier {
         // Show OTP verification bottom sheet
         CustomBottomSheet.show(
           context: context,
-          content: PhoneNumberOtpVerification(),
+          content: const PhoneNumberOtpVerification(),
         );
         notifyListeners();
       } else {
@@ -310,7 +310,7 @@ class AuthProvider extends ChangeNotifier {
         _accessToken = responseData['access_token'];
         print(_accessToken);
         context.pushAndRemoveUntil(
-          DashboardScreen(),
+          const DashboardScreen(),
           (p0) => false,
         );
 

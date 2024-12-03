@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/extensions/account_extension.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/core/utils/bottom_sheets.dart';
 import 'package:student_centric_app/core/utils/fcm.dart';
+import 'package:student_centric_app/features/home/feed_details.dart';
 import 'package:student_centric_app/features/home/providers/post_provider.dart';
 import 'package:student_centric_app/features/home/widgets/feed_posts_container.dart';
 import 'package:student_centric_app/features/profile/screens/profile_screen.dart';
 import 'package:student_centric_app/widgets/app_button.dart';
 import 'package:student_centric_app/widgets/padding_widget.dart';
+import 'package:timeago/timeago.dart' as timeago;
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -194,37 +198,60 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
+          ? Skeletonizer(
+              enabled: true,
+              child: ListView.builder(
+                itemCount: 5,
+                itemBuilder: (context, index) {
+                  return const FeedPostsContainer(
+                      images: [
+                        'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800',
+                        'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800',
+                        'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800'
+                      ],
+                      videos: [
+                        'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800',
+                        'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800',
+                        'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800'
+                      ],
+                      userName: 'Mock data',
+                      timeAgo: 'Mock Time',
+                      postContent: 'Mock Content');
+                },
+              ))
           : posts.isEmpty
-              ? Center(
+              ? const Center(
                   child: Text("No feeds available"),
                 )
               : SingleChildScrollView(
                   child: Column(
                     children: posts.map((post) {
-                      return FeedPostsContainer(
-                        userName:
-                            "${post.user?.firstName} ${post.user?.lastName}" ??
-                                "Default User",
-                        timeAgo: "Just Now",
-                        postContent: post.content ?? "",
-                        images: [
-                          if (post.imageUrlOne != null) post.imageUrlOne!,
-                          if (post.imageUrlTwo != null) post.imageUrlTwo!,
-                          if (post.imageUrlThree != null) post.imageUrlThree!,
-                          if (post.imageUrlFour != null) post.imageUrlFour!,
-                        ],
-                        videos: [
-                          if (post.videoUrlOne != null) post.videoUrlOne!,
-                          if (post.videoUrlTwo != null) post.videoUrlTwo!,
-                          if (post.videoUrlThree != null) post.videoUrlThree!,
-                          if (post.videoUrlFour != null) post.videoUrlFour!,
-                        ],
-                        pollTypeTitle: post.pollTypeTitle,
-                        pollAnswers: post.pollAnswer?.split(","),
-                        voiceNoteUrl: post.voiceNoteUrl,
+                      return GestureDetector(
+                        onTap: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => FeedDetails(post: post,),
+                            ),
+                          );
+                        },
+                        child: FeedPostsContainer(
+                          userName: "${post.user?.firstName} ${post.user?.lastName}" ??
+                                  "Default User",
+                          timeAgo: timeago.format(DateTime.parse(post.createdAt ?? '')),
+                          postContent: post.content ?? "",
+                          images: post.fileUploads
+                              ?.where((e) => e.fileType == FileTypeEnums.image.name)
+                              .map((e) => e.normalUrl ?? '')
+                              .toList() ?? [],
+                          videos:post.fileUploads
+                              ?.where((e) => e.fileType == FileTypeEnums.video.name)
+                              .map((e) => e.normalUrl ?? '')
+                              .toList() ?? [],
+                          pollTypeTitle: post.pollTypeTitle,
+                          pollAnswers: post.pollAnswer?.split(","),
+                          voiceNoteUrl: null,
+                        ),
                       );
                     }).toList(),
                   ).padHorizontal,

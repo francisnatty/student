@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter/foundation.dart'; // For kDebugMode
 
@@ -227,8 +228,7 @@ class ApiService {
     }
   }
 
-  // ... rest of your class remains unchanged ...
-
+  // ... rest of your class remained
   // Handle Dio errors
   void _handleDioError(DioError error, bool showBanner) {
     String errorMessage = "An unexpected error occurred";
@@ -254,7 +254,12 @@ class ApiService {
   // Placeholder for getting auth headers
   Future<Map<String, String>> _getAuthHeaders() async {
     // Implement your logic to retrieve the token
-    String token = "your_token_here";
+    //const FlutterSecureStorage _storage = FlutterSecureStorage();
+    const storage = FlutterSecureStorage();
+    String? token = await storage.read(key: 'access_token');
+
+    debugPrint("token is : $token");
+
     return {
       'Authorization': 'Bearer $token',
     };

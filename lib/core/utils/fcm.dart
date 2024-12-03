@@ -70,12 +70,12 @@ class FCM {
         if (event.notification?.title == "Incoming Call") {
           context.push(
             IncomingCallScreen(
-                callerId: "Samuel Salami", channelName: "Caller123"),
+                callerId: event.notification?.title??"Samuel Salami", channelName: "Caller123"),
           );
         } else if (event.notification?.title == "Incomming Video Call") {
           context.push(
             IncomingVideoCallScreen(
-                callerId: "Samuel Salami", channelName: "Caller123"),
+                callerId: event.notification?.title??"Samuel Salami", channelName: "Caller123"),
           );
         }
       }

@@ -448,10 +448,9 @@ class BasicInformationProvider with ChangeNotifier {
         data: data,
         showBanner: true,
       );
-
       if (response != null && response.statusCode == 200) {
         // Handle success, e.g., navigate to the next screen
-        context.push(UploadProfilePictureScreen());
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const UploadProfilePictureScreen()));
       } else {
         _errorMessage = response?.data['message'] ?? 'An error occurred.';
         notifyListeners();

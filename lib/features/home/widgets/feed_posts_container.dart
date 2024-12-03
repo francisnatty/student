@@ -17,7 +17,7 @@ class FeedPostsContainer extends StatelessWidget {
   final String? voiceNoteUrl;
 
   const FeedPostsContainer({
-    Key? key,
+    super.key,
     required this.userName,
     required this.timeAgo,
     required this.postContent,
@@ -26,7 +26,7 @@ class FeedPostsContainer extends StatelessWidget {
     this.pollTypeTitle,
     this.pollAnswers,
     this.voiceNoteUrl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +71,10 @@ class FeedPostsContainer extends StatelessWidget {
                   ],
                 ),
               ),
-              SvgPicture.asset(
-                AppAssets.moreHoriz,
-                height: 20.h,
-              ),
+              // SvgPicture.asset(
+              //   AppAssets.moreHoriz,
+              //   height: 20.h,
+              // ),
             ],
           ),
           SizedBox(height: 14.h),

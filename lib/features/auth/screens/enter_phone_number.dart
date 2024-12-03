@@ -251,7 +251,7 @@ class _EnterPhoneNumberScreenState extends State<EnterPhoneNumberScreen> {
               children: [
                 // Country picker as a read-only text field
                 SizedBox(
-                  width: 110.w, // Adjust width as needed
+                  width: 140.w, // Adjust width as needed
                   child: AppTextfield.regular(
                     controller: TextEditingController(
                         text: "$selectedFlag $selectedCountryCode"),
@@ -259,7 +259,7 @@ class _EnterPhoneNumberScreenState extends State<EnterPhoneNumberScreen> {
                     onTap: _showCountryPicker,
                     // Optionally, add an icon to indicate it's a dropdown
                     suffixIcon:
-                        Icon(Icons.arrow_drop_down, color: Colors.black),
+                        const Icon(Icons.arrow_drop_down, color: Colors.black),
                     hintText: '',
                     // Customize the appearance to match your text fields
                   ),

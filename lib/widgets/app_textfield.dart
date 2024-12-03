@@ -92,7 +92,7 @@ class _AppTextfieldState extends State<AppTextfield> {
           keyboardType: widget.keyboardType,
           validator: widget.validator,
           style: const TextStyle(
-            color: AppColors.primaryColor,
+            color: Colors.black,
           ),
           readOnly: widget.readOnly,
           onTap: widget.onTap,

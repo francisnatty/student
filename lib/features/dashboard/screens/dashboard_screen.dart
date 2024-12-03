@@ -19,6 +19,8 @@ import 'package:student_centric_app/features/tasks/screens/add_task_screen.dart'
 import 'package:student_centric_app/features/tasks/screens/tasks_page.dart';
 
 class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
+
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
@@ -124,12 +126,11 @@ class _DashboardScreenState extends State<DashboardScreen>
             ),
           ),
           floatingActionButton: provider.selectedIndex == 0 ||
-                  provider.selectedIndex == 1 ||
                   provider.selectedIndex == 3
               ? Container(
                   width: 60.w, // Set width to 60
                   height: 60.h, // Set height to 60
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
                       colors: [

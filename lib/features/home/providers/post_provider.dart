@@ -2,9 +2,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/network/api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:student_centric_app/features/home/models/posts_model.dart';
+
+import '../../dashboard/screens/dashboard_screen.dart';
+
+enum FileTypeEnums { video, image }
 
 class PostsProvider with ChangeNotifier {
   List<Post> _posts = [];
@@ -13,6 +18,8 @@ class PostsProvider with ChangeNotifier {
   String? _fetchErrorMessage;
   String? _postErrorMessage;
   String? _postSuccessMessage;
+  bool _sendCommentLoading = false;
+  bool get sendCommentLoading => _sendCommentLoading;
 
   List<Post> get posts => _posts;
   bool get isFetching => _isFetching;
@@ -41,7 +48,7 @@ class PostsProvider with ChangeNotifier {
           for (var postJson in data['data']) {
             fetchedPosts.add(Post.fromJson(postJson));
           }
-          print("POSTS HERE: ${fetchedPosts[0].imageUrlOne}");
+          print("POSTS HERE: ${fetchedPosts[0].title}");
 
           _posts = fetchedPosts;
           _fetchErrorMessage = null;
@@ -180,6 +187,39 @@ class PostsProvider with ChangeNotifier {
       _postErrorMessage = 'An error occurred: $e';
     } finally {
       _isPosting = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> sendComment({
+    required String feedId,
+    required String comment,
+    required BuildContext context,
+    bool showBanner = true,
+  }) async {
+    _sendCommentLoading = true;
+    notifyListeners();
+
+    debugPrint("post id is => $feedId");
+
+    final data = {
+      "feedId": feedId,
+      "comment": comment,
+    };
+
+    final response = await ApiService.instance.post(
+      "/datas/comment/homefeed",
+      data: data,
+      isProtected: true,
+      showBanner: showBanner,
+    );
+
+    _sendCommentLoading = false;
+    if (response != null && response.statusCode == 200) {
+
+      notifyListeners();
+    } else {
+      // Handle error (e.g., show a snackbar or dialog)
       notifyListeners();
     }
   }

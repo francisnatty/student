@@ -60,21 +60,17 @@ class CommunityTab extends StatelessWidget {
                           "${post.user?.firstName ?? 'Default'} ${post.user?.lastName ?? 'User'}",
                       timeAgo: "Just Now", // Adjust as needed
                       postContent: post.content ?? "",
-                      images: [
-                        if (post.imageUrlOne != null) post.imageUrlOne!,
-                        if (post.imageUrlTwo != null) post.imageUrlTwo!,
-                        if (post.imageUrlThree != null) post.imageUrlThree!,
-                        if (post.imageUrlFour != null) post.imageUrlFour!,
-                      ],
-                      videos: [
-                        if (post.videoUrlOne != null) post.videoUrlOne!,
-                        if (post.videoUrlTwo != null) post.videoUrlTwo!,
-                        if (post.videoUrlThree != null) post.videoUrlThree!,
-                        if (post.videoUrlFour != null) post.videoUrlFour!,
-                      ],
+                      images: post.fileUploads
+                          ?.where((e) => e.fileType == FileTypeEnums.image.name)
+                          .map((e) => e.normalUrl ?? '')
+                          .toList() ?? [],
+                      videos:post.fileUploads
+                          ?.where((e) => e.fileType == FileTypeEnums.video.name)
+                          .map((e) => e.normalUrl ?? '')
+                          .toList() ?? [],
                       pollTypeTitle: post.pollTypeTitle,
                       pollAnswers: post.pollAnswer?.split(","),
-                      voiceNoteUrl: post.voiceNoteUrl,
+                      voiceNoteUrl: '',
                     ),
                   );
                 }).toList(),
