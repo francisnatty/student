@@ -86,6 +86,7 @@ class FeedDetails extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FeedDetailContainer(
+                  feedId: post.id,
                   userName: "${post.user?.firstName} ${post.user?.lastName}" ??
                       "Default User",
                   timeAgo: timeago.format(DateTime.parse(post.createdAt ?? '')),
@@ -150,8 +151,7 @@ class FeedDetails extends StatelessWidget {
                   padding: const EdgeInsets.all(12.0),
                   child: AppTextfield.regular(
                     controller: commentController,
-                    hintText:
-                        'Response as ${post.user?.firstName} ${post.user?.lastName}',
+                    hintText: 'Response as ${post.user?.firstName} ${post.user?.lastName}',
                     prefixIcon: IconButton(
                       icon: SvgPicture.asset('assets/icons/profile.svg'),
                       onPressed: () {},

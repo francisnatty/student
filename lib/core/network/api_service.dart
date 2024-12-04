@@ -98,12 +98,12 @@ class ApiService {
 
   // Generic POST request
   Future<Response?> post(
-    String path, {
-    dynamic data,
-    bool isProtected = false,
-    bool isMultipart = false,
-    bool showBanner = true,
-  }) async {
+      String path, {
+        dynamic data,
+        bool isProtected = false,
+        bool isMultipart = false,
+        bool showBanner = true,
+      }) async {
     try {
       Options options = Options();
       if (isProtected) {
@@ -116,9 +116,14 @@ class ApiService {
       // Pass showBanner via options.extra
       options.extra = {'showBanner': showBanner};
 
+      // Avoid wrapping FormData again
+      final requestData = isMultipart && data is! FormData
+          ? FormData.fromMap(data)
+          : data;
+
       Response response = await _dio.post(
         path,
-        data: isMultipart ? FormData.fromMap(data) : data,
+        data: requestData,
         options: options,
       );
 
@@ -128,6 +133,7 @@ class ApiService {
       return null;
     }
   }
+
 
   // Generic PATCH request
   Future<Response?> patch(

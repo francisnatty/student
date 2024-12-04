@@ -10,6 +10,7 @@ import 'package:student_centric_app/features/home/models/posts_model.dart';
 import '../../dashboard/screens/dashboard_screen.dart';
 
 enum FileTypeEnums { video, image }
+enum PostTypeEnums {feed,community,status}
 
 class PostsProvider with ChangeNotifier {
   List<Post> _posts = [];
@@ -20,6 +21,8 @@ class PostsProvider with ChangeNotifier {
   String? _postSuccessMessage;
   bool _sendCommentLoading = false;
   bool get sendCommentLoading => _sendCommentLoading;
+  bool _isLike = false;
+  bool get isLike=> _isLike;
 
   List<Post> get posts => _posts;
   bool get isFetching => _isFetching;
@@ -191,6 +194,7 @@ class PostsProvider with ChangeNotifier {
     }
   }
 
+
   Future<void> sendComment({
     required String feedId,
     required String comment,
@@ -223,6 +227,38 @@ class PostsProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> likeFeed({
+    required String feedId,
+    required BuildContext context,
+    bool showBanner = true,
+  }) async {
+    _sendCommentLoading = true;
+    notifyListeners();
+
+    debugPrint("feed id is => $feedId");
+
+    final data = {
+      "feedId": feedId,
+    };
+debugPrint("like clicked");
+    final response = await ApiService.instance.post(
+      "/datas/like/homefeed",
+      data: data,
+      isProtected: true,
+      showBanner: showBanner,
+    );
+
+    _sendCommentLoading = false;
+    if (response != null && response.statusCode == 200) {
+       _isLike = true;
+      notifyListeners();
+    } else {
+      // Handle error (e.g., show a snackbar or dialog)
+      notifyListeners();
+    }
+  }
+
 
   /// Resets the posts and related states.
   void reset() {

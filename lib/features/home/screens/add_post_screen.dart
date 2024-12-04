@@ -13,6 +13,8 @@ import 'package:student_centric_app/widgets/app_button.dart';
 import 'package:student_centric_app/widgets/padding_widget.dart';
 
 class AddPostScreen extends StatefulWidget {
+  const AddPostScreen({super.key});
+
   @override
   _AddPostScreenState createState() => _AddPostScreenState();
 }
@@ -27,6 +29,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
   File? _selectedVoiceNote;
 
   final int maxMediaCount = 4;
+  int? selectedIndex = 0;
+  final List<String> postItemList = [
+    "Post to feed",
+    "Post to community",
+    "Post to status"
+  ];
 
   Future<void> _pickMedia({required bool isImage}) async {
     final ImagePicker _picker = ImagePicker();
@@ -57,9 +65,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   Future<void> _postToFeed() async {
     final postsProvider = Provider.of<PostsProvider>(context, listen: false);
-
+    debugPrint("selected post Type => ${selectedIndex}");
     await postsProvider.postToFeed(
-      postType: 'feed', // Example post type
+      postType: (selectedIndex == 0)
+          ? PostTypeEnums.feed.name
+          : (selectedIndex == 1)
+              ? PostTypeEnums.community.name
+              : PostTypeEnums.status.name, // Example post type
       userId: context.account.user!.id
           .toString(), // Replace with the actual user ID
       content: _contentController.text,
@@ -117,7 +129,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         leading: IconButton(
           icon: CircleAvatar(
             radius: 24.r,
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back,
             ),
           ),
@@ -125,23 +137,55 @@ class _AddPostScreenState extends State<AddPostScreen> {
             Navigator.pop(context);
           },
         ),
-        actions: [
-          IconButton(
-            icon: SvgPicture.asset(
-              AppAssets.moreHoriz,
-            ),
-            onPressed: () {
-              // Add additional actions here
-            },
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             20.verticalSpace,
-            Row(
+            SizedBox(
+              height: 40.h,
+              child: ListView.builder(
+                itemCount: postItemList.length,
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = index;
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      margin: const EdgeInsets.only(right: 4),
+                      decoration: BoxDecoration(
+                        color: AppColors.grey1,
+                        border: Border.all(
+                          color: AppColors.grey1,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          16.0,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          postItemList[index],
+                          style: TextStyle(
+                            color: selectedIndex == index
+                                ? AppColors.primaryColor
+                                : Colors.black,
+                            fontSize: 14.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            10.verticalSpace,
+            (selectedIndex == 0) ? Row(
               children: [
                 CircleAvatar(
                   radius: 24.r,
@@ -149,187 +193,262 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     AppAssets.profileIcon,
                   ),
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: 12),
                 Text(
                   "${context.account.user!.firstName} ${context.account.user!.lastName}",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
-            ),
-            SizedBox(height: 16),
-            TextField(
+            ):Container(),
+            const SizedBox(height: 16),
+            (selectedIndex == 0) ? _postToFeedWidget() : _postToStatusWidget(),
+            const SizedBox(height: 32),
+            (selectedIndex == 0) ? AppButton.primary(
+              text: "Post",
+              onPressed: isPosting ? null : _postToFeed,
+              isLoading: isPosting,
+            ):
+            Container()
+          ],
+        ).padHorizontal,
+      ),
+    );
+  }
+
+  Widget _postToFeedWidget() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+      decoration: BoxDecoration(
+          border: Border.all(color: AppColors.greyTwo),
+          borderRadius: BorderRadius.circular(20)),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: TextField(
               controller: _contentController,
               maxLines: null,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Start typing...',
                 border: InputBorder.none,
                 hintStyle: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             ),
-            if (_selectedImages.isNotEmpty || _selectedVideos.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    ..._selectedImages.map((image) => Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Image.file(image,
-                                height: 100, width: 100, fit: BoxFit.cover),
-                            Positioned(
-                              top: -8,
-                              right: -8,
-                              child: GestureDetector(
-                                onTap: () => setState(() {
-                                  _selectedImages.remove(image);
-                                }),
-                                child: CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: Colors.red,
-                                  child: Icon(Icons.close,
-                                      color: Colors.white, size: 16),
-                                ),
-                              ),
-                            )
-                          ],
-                        )),
-                    ..._selectedVideos.map((video) => Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Icon(Icons.video_library, size: 100),
-                            Positioned(
-                              top: -8,
-                              right: -8,
-                              child: GestureDetector(
-                                onTap: () => setState(() {
-                                  _selectedVideos.remove(video);
-                                }),
-                                child: CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: Colors.red,
-                                  child: Icon(Icons.close,
-                                      color: Colors.white, size: 16),
-                                ),
-                              ),
-                            )
-                          ],
-                        )),
-                  ],
-                ),
-              ),
-            if (isPollAdded)
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: _pollChoice1Controller,
-                      decoration: InputDecoration(
-                        hintText: 'Choice 1',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    TextField(
-                      controller: _pollChoice2Controller,
-                      decoration: InputDecoration(
-                        hintText: 'Choice 2',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    TextButton(
-                      onPressed: () {
-                        // Add more poll choices logic
-                      },
-                      child: Text('Add another choice'),
-                    ),
-                    SizedBox(height: 16),
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isPollAdded = false; // Remove poll
-                        });
-                      },
-                      child: Row(
+          ),
+          if (_selectedImages.isNotEmpty || _selectedVideos.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  ..._selectedImages.map((image) => Stack(
+                        clipBehavior: Clip.none,
                         children: [
-                          Icon(Icons.remove_circle, color: Colors.red),
-                          SizedBox(width: 8),
-                          Text('Remove Poll',
-                              style: TextStyle(color: Colors.red)),
+                          Image.file(image,
+                              height: 100, width: 100, fit: BoxFit.cover),
+                          Positioned(
+                            top: -8,
+                            right: -8,
+                            child: GestureDetector(
+                              onTap: () => setState(() {
+                                _selectedImages.remove(image);
+                              }),
+                              child: const CircleAvatar(
+                                radius: 12,
+                                backgroundColor: Colors.red,
+                                child: Icon(Icons.close,
+                                    color: Colors.white, size: 16),
+                              ),
+                            ),
+                          )
                         ],
-                      ),
-                    ),
-                  ],
-                ),
+                      )),
+                  ..._selectedVideos.map((video) => Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          const Icon(Icons.video_library, size: 100),
+                          Positioned(
+                            top: -8,
+                            right: -8,
+                            child: GestureDetector(
+                              onTap: () => setState(() {
+                                _selectedVideos.remove(video);
+                              }),
+                              child: const CircleAvatar(
+                                radius: 12,
+                                backgroundColor: Colors.red,
+                                child: Icon(Icons.close,
+                                    color: Colors.white, size: 16),
+                              ),
+                            ),
+                          )
+                        ],
+                      )),
+                ],
               ),
-            SizedBox(height: 16),
-            Row(
-              children: [
-                IconButton(
-                  icon: SvgPicture.asset(
-                    AppAssets.galleryIcon,
-                    height: 25.h,
-                  ),
-                  onPressed: () => _pickMedia(isImage: true),
-                ),
-                IconButton(
-                  icon: SvgPicture.asset(
-                    AppAssets.videoIcon,
-                    height: 25.h,
-                  ),
-                  onPressed: () => _pickMedia(isImage: false),
-                ),
-                IconButton(
-                  icon: SvgPicture.asset(
-                    AppAssets.pollIcon,
-                    height: 25.h,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isPollAdded = true; // Toggle poll UI
-                    });
-                  },
-                ),
-                IconButton(
-                  icon: SvgPicture.asset(
-                    AppAssets.locationIcon,
-                    height: 25.h,
-                  ),
-                  onPressed: () {
-                    // Add location functionality
-                  },
-                ),
-                IconButton(
-                  icon: SvgPicture.asset(
-                    AppAssets.microphoneIcon,
-                    height: 25.h,
-                  ),
-                  onPressed: _pickVoiceNote,
-                ),
-              ],
             ),
-            SizedBox(height: 32),
-            AppButton.primary(
-              text: "Post",
-              onPressed: isPosting ? null : _postToFeed,
-              isLoading: isPosting,
-            )
-          ],
-        ).padHorizontal,
+          if (isPollAdded)
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: _pollChoice1Controller,
+                    decoration: InputDecoration(
+                      hintText: 'Choice 1',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 12),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: _pollChoice2Controller,
+                    decoration: InputDecoration(
+                      hintText: 'Choice 2',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 12),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: () {
+                      // Add more poll choices logic
+                    },
+                    child: const Text('Add another choice'),
+                  ),
+                  const SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isPollAdded = false; // Remove poll
+                      });
+                    },
+                    child: const Row(
+                      children: [
+                        Icon(Icons.remove_circle, color: Colors.red),
+                        SizedBox(width: 8),
+                        Text('Remove Poll',
+                            style: TextStyle(color: Colors.red)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              IconButton(
+                icon: SvgPicture.asset(
+                  AppAssets.galleryIcon,
+                  height: 25.h,
+                ),
+                onPressed: () => _pickMedia(isImage: true),
+              ),
+              IconButton(
+                icon: SvgPicture.asset(
+                  AppAssets.videoIcon,
+                  height: 25.h,
+                ),
+                onPressed: () => _pickMedia(isImage: false),
+              ),
+              IconButton(
+                icon: SvgPicture.asset(
+                  AppAssets.pollIcon,
+                  height: 25.h,
+                ),
+                onPressed: () {
+                  setState(() {
+                    isPollAdded = true; // Toggle poll UI
+                  });
+                },
+              ),
+              IconButton(
+                icon: SvgPicture.asset(
+                  AppAssets.locationIcon,
+                  height: 25.h,
+                ),
+                onPressed: () {
+                  // Add location functionality
+                },
+              ),
+              IconButton(
+                icon: SvgPicture.asset(
+                  AppAssets.microphoneIcon,
+                  height: 25.h,
+                ),
+                onPressed: _pickVoiceNote,
+              ),
+            ],
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _postToStatusWidget() {
+    return Column(
+      children: [
+        Container(
+          height: 500.h,
+          width: 320.w,
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+          decoration: BoxDecoration(
+              border: Border.all(color: AppColors.greyTwo),
+              borderRadius: BorderRadius.circular(30),
+              image: const DecorationImage(
+                  image: AssetImage(
+                    'assets/images/status_image.png',
+                  ),
+                  fit: BoxFit.cover)),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              height: 60.h,
+              width: 60.w,
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+              decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.greyTwo),
+                  borderRadius: BorderRadius.circular(10),
+                  image: const DecorationImage(
+                      image: AssetImage(
+                        'assets/images/status_image.png',
+                      ),
+                      fit: BoxFit.fill)),
+            ),
+            IconButton(
+              icon: SvgPicture.asset(
+                'assets/icons/camera_circle.svg',
+                height: 60,
+                width: 60,
+              ),
+              onPressed: () => _pickMedia(isImage: true),
+            ),
+            IconButton(
+              icon: SvgPicture.asset(
+                'assets/icons/text_circle.svg',
+                height: 60,
+                width: 60,
+              ),
+              onPressed: () => _pickMedia(isImage: true),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

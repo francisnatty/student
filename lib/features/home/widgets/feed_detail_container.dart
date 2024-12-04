@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
+import 'package:student_centric_app/core/utils/app_colors.dart';
+import 'package:student_centric_app/features/home/providers/post_provider.dart';
 import 'package:video_player/video_player.dart';
-
 
 class FeedDetailContainer extends StatelessWidget {
   final String userName;
@@ -15,9 +17,11 @@ class FeedDetailContainer extends StatelessWidget {
   final List<String>? pollAnswers;
   final String? voiceNoteUrl;
   final String? likeCount;
+  final int? feedId;
 
   const FeedDetailContainer({
     super.key,
+    required this.feedId,
     required this.userName,
     required this.timeAgo,
     required this.postContent,
@@ -138,44 +142,58 @@ class FeedDetailContainer extends StatelessWidget {
                 ],
               ),
             ),
-
-          SizedBox(height: 14.h),
           // Interaction Row
-
           SizedBox(height: 10.h),
-          Row(
-            children: [
-              Row(
+          Consumer<PostsProvider>(
+            builder: (BuildContext context, PostsProvider viewModel, _) {
+              return Row(
                 children: [
-                  SvgPicture.asset(
-                    AppAssets.likeIcon,
-                    height: 20.h,
-                    width: 20.w,
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          debugPrint("like clicked====>");
+                          await viewModel.likeFeed(
+                              feedId: feedId.toString() ?? '',
+                              context: context);
+                        },
+                        child: (viewModel.isLike)?SvgPicture.asset(
+                          color: AppColors.primaryColor,
+                          AppAssets.likeIcon,
+                          height: 20.h,
+                          width: 20.w,
+                        ):SvgPicture.asset(
+                          AppAssets.likeIcon,
+                          height: 20.h,
+                          width: 20.w,
+                        ),
+                      ),
+                      SizedBox(width: 6.w),
+                      Text(
+                        "0",
+                        style: TextStyle(fontSize: 14.sp),
+                      ),
+                    ],
                   ),
-                  SizedBox(width: 6.w),
-                  Text(
-                    "0",
-                    style: TextStyle(fontSize: 14.sp),
+                  SizedBox(width: 24.w),
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        AppAssets.messageIcon,
+                        height: 20.h,
+                        width: 20.w,
+                      ),
+                      SizedBox(width: 6.w),
+                      Text(
+                        likeCount ?? '',
+                        style: TextStyle(fontSize: 14.sp),
+                      ),
+                    ],
                   ),
                 ],
-              ),
-              SizedBox(width: 24.w),
-              Row(
-                children: [
-                  SvgPicture.asset(
-                    AppAssets.messageIcon,
-                    height: 20.h,
-                    width: 20.w,
-                  ),
-                  SizedBox(width: 6.w),
-                  Text(
-                    likeCount??'',
-                    style: TextStyle(fontSize: 14.sp),
-                  ),
-                ],
-              ),
-            ],
-          ),
+              );
+            },
+          )
         ],
       ),
     );
