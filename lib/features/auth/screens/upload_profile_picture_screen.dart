@@ -92,31 +92,27 @@ class _UploadProfilePictureScreenState
                 isActive: true,
                 text: _imageFile == null ? "Add Picture" : "Proceed",
                 onPressed: () async {
-                  print('dresak');
+                  debugPrint(
+                      "this button is not clicking after the user choose image........");
                   if (_imageFile == null) {
-                    print("Here");
                     _pickImage();
                   } else {
-                    print("Here2");
                     final authProvider =
-                    Provider.of<AuthProvider>(context, listen: false);
+                        Provider.of<AuthProvider>(context, listen: false);
                     final storage = SecureStorage();
-                    String? email = await storage.get(key: 'email')??'test@gmail.com';
+                    String? email = await storage.get(key: 'email') ?? '';
                     debugPrint("email is $email");
-
                     await authProvider.uploadProfilePicture(
                       email: email,
                       profileImage: _imageFile!,
                       context: context,
                     );
-
                   }
                 },
               ),
             ),
             10.verticalSpace,
-
-          Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 24.h),
               child: AppButton.primary(
                 isLoading: false,
@@ -124,12 +120,11 @@ class _UploadProfilePictureScreenState
                 isActive: true,
                 backgroundColor: Colors.white,
                 textColor: AppColors.primaryColor,
-                onPressed: (){
-                  print("deana");
-                  debugPrint("delay ===> ");
+                onPressed: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const LoginScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()),
                   );
                 },
               ),

@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:student_centric_app/core/extensions/account_extension.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
-import 'package:student_centric_app/features/home/home_screen.dart';
 import 'package:student_centric_app/features/home/providers/post_provider.dart';
 import 'package:student_centric_app/widgets/app_button.dart';
 import 'package:student_centric_app/widgets/padding_widget.dart';

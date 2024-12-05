@@ -103,7 +103,7 @@ class FeedDetails extends StatelessWidget {
                       [],
                   pollTypeTitle: post.pollTypeTitle,
                   pollAnswers: post.pollAnswer?.split(","),
-                  likeCount: (post.likeOnFeeds!.isNotEmpty)
+                  likeCount: (post.likeOnFeeds !=null && post.likeOnFeeds!.isNotEmpty)
                       ? post.likeOnFeeds!.first.feedLike.toString()
                       : '0',
                   voiceNoteUrl: null,
@@ -142,7 +142,7 @@ class FeedDetails extends StatelessWidget {
                         lName: post.user?.lastName ?? '',
                         time: post.createdAt ?? '',
                         post: post.commentOnFeeds![index],
-                        feedLikes: (post.likeOnFeeds!.isNotEmpty)
+                        feedLikes: (post.likeOnFeeds !=null && post.likeOnFeeds!.isNotEmpty)
                             ? post.likeOnFeeds!.first.feedLike.toString()
                             : '0',
                       );

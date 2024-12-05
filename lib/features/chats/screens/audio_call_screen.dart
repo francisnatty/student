@@ -16,7 +16,8 @@ import 'package:provider/provider.dart';
 
 class AudioCallScreen extends StatefulWidget {
   final String personToCallId;
-  const AudioCallScreen({super.key, required this.personToCallId});
+  final String receiverName;
+  const AudioCallScreen({super.key, required this.personToCallId,required this.receiverName});
 
   @override
   State<AudioCallScreen> createState() => _AudioCallScreenState();
@@ -110,13 +111,25 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
     await _engine!.joinChannel(
       token: token,
       channelId: channelName,
-      options: ChannelMediaOptions(
+      options: const ChannelMediaOptions(
         autoSubscribeAudio: true,
         publishMicrophoneTrack: true,
         clientRoleType: ClientRoleType.clientRoleBroadcaster,
       ),
       uid: userId,
     );
+  }
+
+  // Method to generate initials from the name
+  String _getInitials(String name) {
+    List<String> names = name.trim().split(' ');
+    String initials = '';
+    if (names.length >= 2) {
+      initials = names[0][0] + names[1][0];
+    } else if (names.length == 1) {
+      initials = names[0][0];
+    }
+    return initials.toUpperCase();
   }
 
   @override
@@ -128,10 +141,11 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final String initials = _getInitials(widget.receiverName);
     // Your existing UI code with minor adjustments
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(AppAssets.callBackground),
             fit: BoxFit.fitWidth,
@@ -195,7 +209,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
               ],
             ).padHorizontal,
             Text(
-              "Daenerys\nTargaryen",
+              widget.receiverName??"Daenerys\nTargaryen",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 36.sp,
@@ -215,9 +229,21 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                   ),
             40.verticalSpace,
             CircleAvatar(
-              radius: 95.r,
-              backgroundImage: AssetImage("assets/images/avatar.png"),
+              radius: 34.r,
+              backgroundColor: AppColors.primaryThree, // Fixed color for all avatars
+              child: Text(
+                initials,
+                style: TextStyle(
+                  color: Colors.white, // Text color
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.sp,
+                ),
+              ),
             ),
+            // CircleAvatar(
+            //   radius: 95.r,
+            //   backgroundImage: AssetImage("assets/images/avatar.png"),
+            // ),
             Spacer(),
             Padding(
               padding: EdgeInsets.only(bottom: 20.h),

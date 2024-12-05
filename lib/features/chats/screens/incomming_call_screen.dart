@@ -147,7 +147,7 @@ class _IncomingCallScreenState extends State<IncomingCallScreen> {
               ],
             ).padHorizontal,
             Text(
-              "Samuel\nSalami",
+              widget.callerId,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 36.sp,

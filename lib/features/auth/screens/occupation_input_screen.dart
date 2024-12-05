@@ -10,7 +10,7 @@ import 'package:student_centric_app/widgets/padding_widget.dart';
 import 'package:student_centric_app/widgets/selector_bottom_sheet.dart';
 
 class OccupationInputScreen extends StatefulWidget {
-  const OccupationInputScreen({Key? key}) : super(key: key);
+  const OccupationInputScreen({super.key});
 
   @override
   State<OccupationInputScreen> createState() => _OccupationInputScreenState();
@@ -131,6 +131,8 @@ class _OccupationInputScreenState extends State<OccupationInputScreen> {
               text: "Proceed",
               onPressed: areAllFieldsFilled
                   ? () {
+                     print("log here");
+                     debugPrint("log there........");
                       provider.submitOccupationInformation(
                         industry: industryController.text,
                         specialty: specialtyController.text,

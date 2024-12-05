@@ -28,58 +28,61 @@ class ConversationModel {
 }
 
 class ConversationData {
-  int? id;
+  //int? id;
   //Null? callId;
-  String? messageId;
-  int? senderId;
-  int? receiverId;
-  String? content;
-  String? type;
-  String? status;
+ // String? messageId;
+  String? senderId;
+  String? receiverId;
+  String? message;
+  //String? type;
+  //String? status;
   //Null? channelName;
-  String? createdAt;
-  String? updatedAt;
+  DateTime? createdAt;
+  //String? updatedAt;
 
   ConversationData(
-      {this.id,
+      {
+        //this.id,
       //this.callId,
-      this.messageId,
+     // this.messageId,
       this.senderId,
       this.receiverId,
-      this.content,
-      this.type,
-      this.status,
+      this.message,
+     // this.type,
+     // this.status,
       // this.channelName,
       this.createdAt,
-      this.updatedAt});
+      //this.updatedAt
+      });
 
   ConversationData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+   // id = json['id'];
     // callId = json['callId'];
-    messageId = json['messageId'];
+   // messageId = json['messageId'];
     senderId = json['senderId'];
     receiverId = json['receiverId'];
-    content = json['content'];
-    type = json['type'];
-    status = json['status'];
+    message = json['message'];
+    //type = json['type'];
+   // status = json['status'];
     // channelName = json['channelName'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
+    //createdAt = json['created_at'];
+    createdAt= DateTime.parse(json['createdAt']);
+   // updatedAt = json['updated_at'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
+    //data['id'] = id;
     //data['callId'] = callId;
-    data['messageId'] = messageId;
+   // data['messageId'] = messageId;
     data['senderId'] = senderId;
     data['receiverId'] = receiverId;
-    data['content'] = content;
-    data['type'] = type;
-    data['status'] = status;
+    data['message'] = message;
+   // data['type'] = type;
+   // data['status'] = status;
     //data['channelName'] = channelName;
     data['created_at'] = createdAt;
-    data['updated_at'] = updatedAt;
+   // data['updated_at'] = updatedAt;
     return data;
   }
 }

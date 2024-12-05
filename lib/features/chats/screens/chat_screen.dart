@@ -121,10 +121,9 @@ class _ChatScreenState extends State<ChatScreen> {
                           final ChatUser chatUser = chatProvider.chats[index];
                           return GestureDetector(
                             onTap: () {
-                              var authProvider = Provider.of<AuthProvider>(
-                                      context,
-                                      listen: false)
-                                  .user;
+                              var authProvider = Provider.of<AuthProvider>(context,listen: false).user;
+                              var receiverId = chatUser.id;
+                              print("receiver id => $receiverId");
                               int senderId = authProvider?.id ?? 0;
                               Provider.of<ChatProvider>(context, listen: false)
                                   .fetchConversation(

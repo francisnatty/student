@@ -83,6 +83,7 @@ class IndividualChatScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => AudioCallScreen(
+                      receiverName: "${chatUser.firstName} ${chatUser.lastName}",
                       personToCallId: chatUser.id.toString(),
                     ),
                   ),
@@ -129,7 +130,7 @@ class ChatBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var authProvider = Provider.of<AuthProvider>(context, listen: false).user;
-    int senderId = authProvider?.id ?? 0;
+    String senderId = authProvider?.id.toString() ?? '0';
     debugPrint("sender id is => ${authProvider?.id.toString() ?? ''}");
     return Consumer<ChatProvider>(
       builder: (BuildContext context, ChatProvider viewModel, Widget? child) {
@@ -161,7 +162,7 @@ class ChatBody extends StatelessWidget {
                   itemCount: viewModel.conversationData.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ChatBubble(
-                      text: viewModel.conversationData[index].content ?? '',
+                      text: viewModel.conversationData[index].message ?? '',
                       isSender: (senderId ==
                               viewModel.conversationData[index].senderId)
                           ? true

@@ -351,7 +351,7 @@ class AuthProvider extends ChangeNotifier {
     _isLoading = false;
     if (response != null && response.statusCode == 200) {
       _email = email;
-      context.push(ForgortPasswordOtpScreen());
+      context.push(const ForgortPasswordOtpScreen());
       notifyListeners();
     } else {
       // Handle error (e.g., show a snackbar or dialog)

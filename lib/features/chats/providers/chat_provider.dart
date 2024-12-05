@@ -37,7 +37,6 @@ class ChatProvider with ChangeNotifier {
           response.data['error'] == false) {
         final List<dynamic> data = response.data['data'];
 
-        // Parse and filter the chats to include only those with firstName and lastName
         _chats = data
             .map((json) => ChatUser.fromJson(json))
             .where((chatUser) =>
@@ -68,11 +67,9 @@ class ChatProvider with ChangeNotifier {
           response.statusCode == 200 &&
           response.data['error'] == false) {
         _conversationData.clear();
-        final List<dynamic> data = response.data['data'];
-        _conversationData = data
-            .map((json) => ConversationData.fromJson(json))
-            .toList();
 
+        _conversationData = parseChatMessages(response.data);
+        notifyListeners();
         _chatErrorMessage = null;
       } else {
         _chatErrorMessage = response?.data['msg'] ?? 'Failed to fetch chats';
@@ -85,44 +82,20 @@ class ChatProvider with ChangeNotifier {
     }
   }
 
+  List<ConversationData> parseChatMessages(Map<String, dynamic> json) {
+    List<ConversationData> senderMessages = (json['data']['senderChat'] as List)
+        .map((e) => ConversationData.fromJson(e))
+        .toList();
+    List<ConversationData> receiverMessages = (json['data']['receiverChat'] as List)
+        .map((e) => ConversationData.fromJson(e))
+        .toList();
 
-
-  // Future<void> initMessage({
-  //   required String senderId,
-  //   required String receiverId,
-  //   required String content,
-  //   required BuildContext context,
-  //   bool showBanner = true,
-  // }) async {
-  //   _sendMessageLoading = true;
-  //   notifyListeners();
-  //
-  //   final data = {
-  //     "senderId":senderId,
-  //     "receiverId": receiverId,
-  //     "content": content,
-  //     "type":"chat"
-  //   };
-  //
-  //   final response = await ApiService.instance.post(
-  //     "/datas/initiate/chat",
-  //     data: data,
-  //     isProtected: false,
-  //     showBanner: showBanner,
-  //   );
-  //
-  //   _sendMessageLoading = false;
-  //   if (response != null && response.statusCode == 200) {
-  //     final responseData = response.data;
-  //     // Parse user data
-  //     _messageId = responseData['data']['messageId'];
-  //     fetchConversation(messageId: messageId??'');
-  //     notifyListeners();
-  //   } else {
-  //     // Handle error (e.g., show a snackbar or dialog)
-  //     notifyListeners();
-  //   }
-  // }
+    List<ConversationData> allMessages = [...senderMessages, ...receiverMessages];
+    allMessages.sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
+    _conversationData = allMessages;
+    notifyListeners();
+    return allMessages;
+  }
 
 
   Future<void> sendMessage({
@@ -140,10 +113,9 @@ class ChatProvider with ChangeNotifier {
 
     final data = {
       "messageId": messageId,
-      "senderId":senderId,
       "receiverId": receiverId,
       "content": content,
-      "type":"chat"
+
     };
 
     final response = await ApiService.instance.post(

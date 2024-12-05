@@ -82,7 +82,7 @@ class ResponseWidget extends StatelessWidget {
                   ),
                   SizedBox(width: 6.w),
                   Text(
-                    (post.likeOnFeeds!.isNotEmpty )
+                    (post.likeOnFeeds !=null && post.likeOnFeeds!.isNotEmpty )
                         ? "${post.likeOnFeeds?.first.commentLike ?? 0}"
                         : '0',
                     style: TextStyle(fontSize: 14.sp),

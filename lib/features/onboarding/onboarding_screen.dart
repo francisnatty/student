@@ -139,10 +139,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   AppButton.primary(
                     text: 'Get Started',
                     onPressed: () {
-                      context.push(SignUpScreen());
+                      context.push(const SignUpScreen());
                     },
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // Login Button
                   AppButton.secondary(
