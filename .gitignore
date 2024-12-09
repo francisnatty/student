@@ -1,0 +1,9 @@
+# Flutter build directory
+build/
+
+# Other common files to ignore
+.dart_tool/
+.idea/
+.vscode/
+.packages
+pubspec.lock
