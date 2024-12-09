@@ -57,7 +57,7 @@ class _IncomingCallScreenState extends State<IncomingCallScreen> {
   Future<void> _initAgoraEngine(String token) async {
     await [Permission.microphone].request();
 
-    _engine = await createAgoraRtcEngine();
+    _engine = createAgoraRtcEngine();
     await _engine!.initialize(RtcEngineContext(
       appId: appId,
       channelProfile: ChannelProfileType.channelProfileCommunication,
@@ -92,7 +92,7 @@ class _IncomingCallScreenState extends State<IncomingCallScreen> {
     await _engine!.joinChannel(
       token: token,
       channelId: widget.channelName,
-      options: ChannelMediaOptions(
+      options: const ChannelMediaOptions(
         autoSubscribeAudio: true,
         publishMicrophoneTrack: true,
         clientRoleType: ClientRoleType.clientRoleBroadcaster,
@@ -113,7 +113,7 @@ class _IncomingCallScreenState extends State<IncomingCallScreen> {
     return Scaffold(
       // Your existing UI code with minor adjustments
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(AppAssets.callBackground),
             fit: BoxFit.fitWidth,
@@ -132,7 +132,7 @@ class _IncomingCallScreenState extends State<IncomingCallScreen> {
                   child: Container(
                     width: 50.w,
                     height: 50.h,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: AppColors.greyTwo,
                       shape: BoxShape.circle,
                     ),
@@ -166,9 +166,9 @@ class _IncomingCallScreenState extends State<IncomingCallScreen> {
             40.verticalSpace,
             CircleAvatar(
               radius: 95.r,
-              backgroundImage: AssetImage("assets/images/avatar.png"),
+              backgroundImage: const AssetImage("assets/images/avatar.png"),
             ),
-            Spacer(),
+            const Spacer(),
             Padding(
               padding: EdgeInsets.only(bottom: 20.h),
               child: Container(
@@ -227,7 +227,7 @@ class _IncomingCallScreenState extends State<IncomingCallScreen> {
                         children: [
                           CircleAvatar(
                             radius: 50.r,
-                            backgroundColor: Color(0xFF27AE60),
+                            backgroundColor: const Color(0xFF27AE60),
                             child: Center(
                               child: Transform.rotate(
                                 angle: -90,

@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:student_centric_app/config/routes/navigation_routes.dart';
-import 'package:student_centric_app/core/extensions/account_extension.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/features/auth/providers/auth_provider.dart';

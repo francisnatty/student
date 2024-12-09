@@ -103,9 +103,10 @@ class FeedDetails extends StatelessWidget {
                       [],
                   pollTypeTitle: post.pollTypeTitle,
                   pollAnswers: post.pollAnswer?.split(","),
-                  likeCount: (post.likeOnFeeds !=null && post.likeOnFeeds!.isNotEmpty)
-                      ? post.likeOnFeeds!.first.feedLike.toString()
-                      : '0',
+                  likeCount:
+                      (post.likeOnFeeds != null && post.likeOnFeeds!.isNotEmpty)
+                          ? post.likeOnFeeds!.first.feedLike.toString()
+                          : '0',
                   voiceNoteUrl: null,
                 ),
                 const SizedBox(
@@ -142,7 +143,8 @@ class FeedDetails extends StatelessWidget {
                         lName: post.user?.lastName ?? '',
                         time: post.createdAt ?? '',
                         post: post.commentOnFeeds![index],
-                        feedLikes: (post.likeOnFeeds !=null && post.likeOnFeeds!.isNotEmpty)
+                        feedLikes: (post.likeOnFeeds != null &&
+                                post.likeOnFeeds!.isNotEmpty)
                             ? post.likeOnFeeds!.first.feedLike.toString()
                             : '0',
                       );
@@ -151,7 +153,8 @@ class FeedDetails extends StatelessWidget {
                   padding: const EdgeInsets.all(12.0),
                   child: AppTextfield.regular(
                     controller: commentController,
-                    hintText: 'Response as ${post.user?.firstName} ${post.user?.lastName}',
+                    hintText:
+                        'Response as ${post.user?.firstName} ${post.user?.lastName}',
                     prefixIcon: IconButton(
                       icon: SvgPicture.asset('assets/icons/profile.svg'),
                       onPressed: () {},
@@ -160,13 +163,15 @@ class FeedDetails extends StatelessWidget {
                       onTap: () async {
                         debugPrint('clicked');
                         if (commentController.text.isNotEmpty) {
-                          await viewModel.sendComment(
-                              feedId: post.id.toString() ?? '',
-                              comment: commentController.text.trim(),
-                              context: context).then((value){
+                          await viewModel
+                              .sendComment(
+                                  feedId: post.id.toString() ?? '',
+                                  comment: commentController.text.trim(),
+                                  context: context)
+                              .then((value) {
                             commentController.clear();
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) => const DashboardScreen()));
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const DashboardScreen()));
                           });
                         }
                       },

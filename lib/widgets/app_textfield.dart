@@ -77,7 +77,7 @@ class _AppTextfieldState extends State<AppTextfield> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         widget.label == null
-            ? SizedBox.shrink()
+            ? const SizedBox.shrink()
             : Text(
                 widget.label ?? "",
                 style: TextStyle(
@@ -85,7 +85,7 @@ class _AppTextfieldState extends State<AppTextfield> {
                   color: Colors.black,
                 ),
               ),
-        widget.label == null ? SizedBox.shrink() : 8.verticalSpace,
+        widget.label == null ? const SizedBox.shrink() : 8.verticalSpace,
         TextFormField(
           controller: widget.controller,
           obscureText: widget.isPassword ? _obscureText : false,
@@ -104,13 +104,13 @@ class _AppTextfieldState extends State<AppTextfield> {
               color: AppColors.blackFour,
             ),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: Color(0xFF7E93A0),
               ),
               borderRadius: BorderRadius.circular(64.r),
             ),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: AppColors.primaryColor,
                 width: 1.5,
               ),

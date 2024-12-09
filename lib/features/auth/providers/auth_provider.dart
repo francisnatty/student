@@ -4,11 +4,12 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/network/api_service.dart';
+import 'package:student_centric_app/core/storage/local_storage.dart';
 import 'package:student_centric_app/core/utils/bottom_sheets.dart';
 import 'package:student_centric_app/core/utils/fcm.dart';
+import 'package:student_centric_app/features/auth/models/login_response.dart';
 import 'package:student_centric_app/features/auth/models/user_model.dart';
 import 'package:student_centric_app/features/auth/screens/basic_information_screen.dart';
 import 'package:student_centric_app/features/auth/screens/change_password_screen.dart';
@@ -20,8 +21,11 @@ import 'package:student_centric_app/features/auth/widgets/email_verification.dar
 import 'package:student_centric_app/features/auth/widgets/otp_verification.dart';
 import 'package:student_centric_app/features/dashboard/screens/dashboard_screen.dart';
 
+import '../../../config/service_locator.dart';
+
 class AuthProvider extends ChangeNotifier {
   // Variables to hold authentication state
+  final _storage = Di.getIt<LocalStorage>();
   bool _isLoading = false;
   String? _email;
   String? _phoneNumber;
@@ -251,7 +255,7 @@ class AuthProvider extends ChangeNotifier {
       if (response != null && response.statusCode == 200) {
         // OTP verified successfully
         // Navigate to the next screen, e.g., Basic Information
-        context.push(BasicInformationScreen());
+        context.push(const BasicInformationScreen());
         notifyListeners();
       } else if (response != null && response.statusCode == 400) {
         // Example: Invalid OTP
@@ -303,6 +307,8 @@ class AuthProvider extends ChangeNotifier {
       if (response != null && response.statusCode == 200) {
         final responseData = response.data;
 
+        final loginResponse = LoginResponse.fromJson(responseData['data']);
+
         // Parse user data
         _user = UserModel.fromJson(responseData['data']);
 
@@ -314,10 +320,11 @@ class AuthProvider extends ChangeNotifier {
           (p0) => false,
         );
 
-        const FlutterSecureStorage _storage = FlutterSecureStorage();
+        //   const FlutterSecureStorage _sstorage = FlutterSecureStorage();
 
-        await _storage.write(key: 'access_token', value: _accessToken);
-        print("LOGIN SUCCESSFUL");
+        // await _sstorage.write(key: 'access_token', value: _accessToken);
+        await _storage.saveAcessToken(_accessToken!);
+        await _storage.saveLoginResponse(loginResponse);
 
         notifyListeners();
       } else {}
@@ -448,29 +455,40 @@ class AuthProvider extends ChangeNotifier {
     required BuildContext context,
     bool showBanner = true,
   }) async {
-    print("API called");
-    _isLoading = true;
-    notifyListeners();
+    // _isLoading = true;
+    // notifyListeners();
 
     try {
-      // Prepare FormData
-      FormData formData = FormData.fromMap({
-        "email": email,
-        "profileImage": await MultipartFile.fromFile(
-          profileImage.path,
-          filename: "profile_picture.${profileImage.path.split('.').last}",
-        ),
-      });
+      var dio = Dio();
 
-      // Make the PATCH request
-      final response = await ApiService.instance.patch(
-        "/auth/onboarding/upload/user/profilePicture",
-        data: formData,
-        isMultipart: true,
-        showBanner: showBanner,
+      // Read file as bytes
+      List<int> fileBytes = await profileImage.readAsBytes();
+
+      // Create MultipartFile from bytes
+      var filePart = MultipartFile.fromBytes(
+        fileBytes,
+        filename: profileImage.path.split('/').last,
       );
 
-      if (response != null && response.statusCode == 200) {
+      // Create FormData
+      var formData = FormData.fromMap({
+        'email': 'samuelofgod@gmail.com',
+        'profileImage': filePart,
+      });
+
+      // Make the request
+      var response = await dio.patch(
+        'https://typescript-boilerplate.onrender.com/api/v1/auth/onboarding/upload/user/profilePicture',
+        data: formData,
+        options: Options(
+          contentType: 'multipart/form-data',
+        ),
+      );
+
+      print('Response: ${response.data}');
+      print(response);
+
+      if (response.statusCode == 200) {
         // Handle successful upload
         context.push(
           SuccessScreen(
@@ -484,6 +502,7 @@ class AuthProvider extends ChangeNotifier {
         );
       } else {}
     } catch (e) {
+      print(e);
     } finally {
       _isLoading = false;
       notifyListeners();

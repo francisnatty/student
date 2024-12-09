@@ -4,6 +4,8 @@ import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class TasksPage extends StatefulWidget {
+  const TasksPage({super.key});
+
   @override
   _TasksPageState createState() => _TasksPageState();
 }
@@ -12,7 +14,7 @@ class _TasksPageState extends State<TasksPage> {
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
-  List<Map<String, dynamic>> _tasks = [
+  final List<Map<String, dynamic>> _tasks = [
     {"title": "Attend", "time": "11:00", "link": "Google meet"},
     {"title": "Deadline for sprint 1", "time": "11:00", "link": "Jira"},
     {"title": "Estate meeting", "time": "11:00", "link": "Zoom meeting"},
@@ -51,7 +53,7 @@ class _TasksPageState extends State<TasksPage> {
                   color: Colors.blue.shade100,
                   shape: BoxShape.circle,
                 ),
-                selectedDecoration: BoxDecoration(
+                selectedDecoration: const BoxDecoration(
                   color: Colors.blue,
                   shape: BoxShape.circle,
                 ),

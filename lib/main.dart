@@ -2,6 +2,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,19 +15,26 @@ import 'package:student_centric_app/features/auth/providers/auth_provider.dart';
 import 'package:student_centric_app/features/auth/providers/basic_information_provider.dart';
 import 'package:student_centric_app/features/chats/providers/call_provider.dart';
 import 'package:student_centric_app/features/chats/providers/chat_provider.dart';
-import 'package:student_centric_app/features/chats/screens/incomming_call_screen.dart';
 import 'package:student_centric_app/features/dashboard/providers/bottom_nav_provider.dart';
+import 'package:student_centric_app/features/dashboard/screens/dashboard_screen.dart';
+import 'package:student_centric_app/features/home/bloc/home_bloc.dart';
+import 'package:student_centric_app/features/home/home_screen.dart';
 import 'package:student_centric_app/features/home/providers/post_provider.dart';
+import 'package:student_centric_app/features/onboarding/onboarding_screen.dart';
+import 'package:student_centric_app/features/test_screen.dart';
 
 // Import your onboarding screen
-import 'package:student_centric_app/features/onboarding/onboarding_screen.dart';
 import 'package:student_centric_app/firebase_options.dart';
+
+import 'config/service_locator.dart';
+import 'features/auth/screens/upload_profile_picture_screen.dart';
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
     GlobalKey<ScaffoldMessengerState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Di.setUpLocator();
 
   // initialize firebase app
   await Firebase.initializeApp(
@@ -118,28 +126,38 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final getIt = Di.getIt;
     return ScreenUtilInit(
       designSize: const Size(
           393, 852), // Adjust based on your design reference screen size
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(
-          title: 'Flutter Demo',
-          scaffoldMessengerKey: scaffoldMessengerKey,
-          theme: ThemeData(
-            scaffoldBackgroundColor: Colors.white,
-            textTheme: GoogleFonts.dmSansTextTheme(
-              // Set your Google Font here
-              Theme.of(context).textTheme,
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => getIt<HomeBloc>(),
             ),
-            colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0E48FB)),
-            useMaterial3: true,
+          ],
+          child: MaterialApp(
+            title: 'Flutter Demo',
+            scaffoldMessengerKey: scaffoldMessengerKey,
+            theme: ThemeData(
+              scaffoldBackgroundColor: Colors.white,
+              textTheme: GoogleFonts.dmSansTextTheme(
+                // Set your Google Font here
+                Theme.of(context).textTheme,
+              ),
+              colorScheme:
+                  ColorScheme.fromSeed(seedColor: const Color(0xFF0E48FB)),
+              useMaterial3: true,
+            ),
+            home: child,
           ),
-          home: child,
         );
       },
-      child: const OnboardingScreen(),
+      child: const DashboardScreen(),
+      // child: const OnboardingScreen(),
     );
   }
 }

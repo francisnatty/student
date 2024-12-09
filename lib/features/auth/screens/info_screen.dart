@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/features/auth/providers/basic_information_provider.dart';
 import 'package:student_centric_app/features/auth/providers/auth_provider.dart';
-import 'package:student_centric_app/features/auth/widgets/auth_appbar.dart';
 import 'package:student_centric_app/widgets/app_button.dart';
 import 'package:student_centric_app/widgets/app_textfield.dart';
 import 'package:student_centric_app/widgets/padding_widget.dart';
@@ -123,7 +122,7 @@ class _InfoScreenState extends State<InfoScreen> {
             SelectBottomSheet(
               label: "Gender",
               hintText: "Select Gender",
-              items: ["Male", "Female", "Others"],
+              items: const ["Male", "Female", "Others"],
               title: "Select Gender",
               controller: genderController,
             ),
@@ -146,16 +145,16 @@ class _InfoScreenState extends State<InfoScreen> {
                       borderRadius: BorderRadius.circular(4.0),
                     ),
                     // Side defines the border color and width when unchecked
-                    side: MaterialStateBorderSide.resolveWith(
+                    side: WidgetStateBorderSide.resolveWith(
                       (states) {
-                        if (states.contains(MaterialState.selected)) {
-                          return BorderSide(
+                        if (states.contains(WidgetState.selected)) {
+                          return const BorderSide(
                             color:
                                 AppColors.primaryColor, // Active border color
                             width: 2.0,
                           );
                         }
-                        return BorderSide(
+                        return const BorderSide(
                           color:
                               AppColors.primaryColor, // Inactive border color
                           width: 1.0,
@@ -163,9 +162,9 @@ class _InfoScreenState extends State<InfoScreen> {
                       },
                     ),
                     // Fill color when checked
-                    fillColor: MaterialStateProperty.resolveWith(
+                    fillColor: WidgetStateProperty.resolveWith(
                       (states) {
-                        if (states.contains(MaterialState.selected)) {
+                        if (states.contains(WidgetState.selected)) {
                           return AppColors.primaryColor; // Active fill color
                         }
                         return Colors.transparent; // Inactive fill color
@@ -189,7 +188,7 @@ class _InfoScreenState extends State<InfoScreen> {
             SelectBottomSheet(
               label: "Pronouns",
               hintText: "Select Pronouns",
-              items: [
+              items: const [
                 "he/him",
                 "she/her",
                 "they/them",
@@ -212,7 +211,7 @@ class _InfoScreenState extends State<InfoScreen> {
             SelectBottomSheet(
               label: "Ethnicity",
               hintText: "Select Ethnicity",
-              items: [
+              items: const [
                 "Native American",
                 "Southeast Asian",
                 "Black/African Descent",
@@ -232,7 +231,7 @@ class _InfoScreenState extends State<InfoScreen> {
             SelectBottomSheet(
               label: "Religion",
               hintText: "Select Religion",
-              items: [
+              items: const [
                 "Atheist",
                 "Agnostic",
                 "Spiritual",
@@ -252,7 +251,7 @@ class _InfoScreenState extends State<InfoScreen> {
             SelectBottomSheet(
               label: "Marital Status",
               hintText: "Select Marital Status",
-              items: [
+              items: const [
                 "Single",
                 "Married",
                 "Civil Partnership",
@@ -268,7 +267,7 @@ class _InfoScreenState extends State<InfoScreen> {
             30.verticalSpace,
             // Proceed Button with Loading Indicator
             basicInfoProvider.isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : AppButton.primary(
                     isActive: isButtonActive, // Updated active state
                     isLoading: basicInfoProvider.isLoading,

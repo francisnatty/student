@@ -1,22 +1,13 @@
 
 
-import 'dart:async';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart'; // Ensure Provider is imported
-import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/features/auth/providers/auth_provider.dart'; // Import AuthProvider
-import 'package:student_centric_app/features/auth/screens/basic_information_screen.dart';
-import 'package:student_centric_app/widgets/app_button.dart';
-import 'package:student_centric_app/widgets/padding_widget.dart';
-import 'package:student_centric_app/widgets/selector_loader.dart';
 
-import '../../../core/utils/app_assets.dart';
 
 class ChatOption extends StatefulWidget {
   const ChatOption({super.key});

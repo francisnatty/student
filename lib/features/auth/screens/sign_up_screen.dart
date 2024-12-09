@@ -5,9 +5,7 @@ import 'package:student_centric_app/core/utils/validators.dart';
 import 'package:student_centric_app/features/auth/providers/auth_provider.dart';
 import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
-import 'package:student_centric_app/core/utils/bottom_sheets.dart';
 import 'package:student_centric_app/features/auth/screens/login_screen.dart';
-import 'package:student_centric_app/features/auth/widgets/email_verification.dart';
 import 'package:student_centric_app/widgets/app_button.dart';
 import 'package:student_centric_app/widgets/app_textfield.dart';
 import 'package:student_centric_app/widgets/password_criteria.dart';
@@ -204,7 +202,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Center(
                       child: GestureDetector(
                         onTap: () {
-                          context.push(LoginScreen());
+                          context.push(const LoginScreen());
                         },
                         child: RichText(
                           text: TextSpan(
@@ -212,7 +210,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               fontSize: 14.sp,
                               color: AppColors.greyOne,
                             ),
-                            children: [
+                            children: const [
                               TextSpan(
                                 text: 'Have an account? ',
                               ),
@@ -239,7 +237,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   fontSize: 10.sp,
                   color: Colors.black,
                 ),
-                children: [
+                children: const [
                   TextSpan(
                     text: 'Clicking continue shows that you agree to our ',
                   ),

@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
-import 'package:video_player/video_player.dart';
+import 'package:student_centric_app/features/home/widgets/video_player.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class FeedPostsContainer extends StatelessWidget {
@@ -190,7 +190,7 @@ class FeedPostsContainer extends StatelessWidget {
 class MediaCarousel extends StatefulWidget {
   final List<String> mediaItems;
 
-  const MediaCarousel({Key? key, required this.mediaItems}) : super(key: key);
+  const MediaCarousel({super.key, required this.mediaItems});
 
   @override
   _MediaCarouselState createState() => _MediaCarouselState();
@@ -217,7 +217,7 @@ class _MediaCarouselState extends State<MediaCarousel> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
+        SizedBox(
           height: 200.h,
           child: PageView.builder(
             controller: _pageController,
@@ -265,83 +265,6 @@ class _MediaCarouselState extends State<MediaCarousel> {
   @override
   void dispose() {
     _pageController.dispose();
-    super.dispose();
-  }
-}
-
-class VideoPlayerWidget extends StatefulWidget {
-  final String videoUrl;
-
-  const VideoPlayerWidget({Key? key, required this.videoUrl}) : super(key: key);
-
-  @override
-  _VideoPlayerWidgetState createState() => _VideoPlayerWidgetState();
-}
-
-class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
-  late VideoPlayerController _controller;
-  bool _isPlaying = false;
-  bool _isInitialized = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) {
-        setState(() {
-          _isInitialized = true;
-        });
-      })
-      ..setLooping(true);
-  }
-
-  void _togglePlayPause() {
-    setState(() {
-      if (_controller.value.isPlaying) {
-        _controller.pause();
-        _isPlaying = false;
-      } else {
-        _controller.play();
-        _isPlaying = true;
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _isInitialized
-        ? GestureDetector(
-            onTap: _togglePlayPause,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                ),
-                if (!_controller.value.isPlaying)
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black45,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.play_arrow,
-                      color: Colors.white,
-                      size: 48.sp,
-                    ),
-                  ),
-              ],
-            ),
-          )
-        : Center(
-            child: CircularProgressIndicator(),
-          );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
     super.dispose();
   }
 }

@@ -9,7 +9,7 @@ import 'package:student_centric_app/widgets/padding_widget.dart';
 import 'package:student_centric_app/widgets/selector_bottom_sheet.dart';
 
 class SchoolDetailsInputScreen extends StatefulWidget {
-  const SchoolDetailsInputScreen({Key? key}) : super(key: key);
+  const SchoolDetailsInputScreen({super.key});
 
   @override
   State<SchoolDetailsInputScreen> createState() =>

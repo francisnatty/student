@@ -1,7 +1,6 @@
 // lib/features/auth/providers/basic_information_provider.dart
 
 import 'package:flutter/material.dart';
-import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/network/api_service.dart';
 import 'package:student_centric_app/core/storage/secure_store.dart';
 import 'package:student_centric_app/features/auth/models/country_model.dart';
@@ -23,7 +22,7 @@ class BasicInformationProvider with ChangeNotifier {
 
   // Cities data
   List<States> _cities = [];
-  bool _isCitiesLoading = false;
+  final bool _isCitiesLoading = false;
   String? _citiesError;
 
   // New Data
@@ -98,7 +97,7 @@ class BasicInformationProvider with ChangeNotifier {
       _currentPage++;
       pageController.animateToPage(
         _currentPage,
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
       notifyListeners();
@@ -110,7 +109,7 @@ class BasicInformationProvider with ChangeNotifier {
       _currentPage--;
       pageController.animateToPage(
         _currentPage,
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
       notifyListeners();

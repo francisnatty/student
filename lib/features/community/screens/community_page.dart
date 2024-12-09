@@ -45,7 +45,7 @@ class _CommunityPageState extends State<CommunityPage> {
                 context: context,
                 content: Column(
                   children: [
-                    Row(
+                    const Row(
                       children: [
                         CircleAvatar(),
                       ],
@@ -55,7 +55,7 @@ class _CommunityPageState extends State<CommunityPage> {
                 ),
               );
             },
-            child: CircleAvatar(),
+            child: const CircleAvatar(),
           ),
           10.horizontalSpace,
         ],
@@ -92,7 +92,7 @@ class _CommunityPageState extends State<CommunityPage> {
                   ),
                 ),
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               GestureDetector(
                 onTap: () {
                   setState(() {
@@ -123,7 +123,7 @@ class _CommunityPageState extends State<CommunityPage> {
           ),
           // Tab Content
           Expanded(
-            child: selectedTabIndex == 0 ? CommunityTab() : ExploreTab(),
+            child: selectedTabIndex == 0 ? const CommunityTab() : const ExploreTab(),
           ),
         ],
       ),

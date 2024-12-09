@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +9,7 @@ import 'package:student_centric_app/core/extensions/account_extension.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/core/utils/bottom_sheets.dart';
-import 'package:student_centric_app/core/utils/fcm.dart';
+import 'package:student_centric_app/features/home/bloc/home_bloc.dart';
 import 'package:student_centric_app/features/home/feed_details.dart';
 import 'package:student_centric_app/features/home/providers/post_provider.dart';
 import 'package:student_centric_app/features/home/widgets/feed_posts_container.dart';
@@ -17,9 +18,8 @@ import 'package:student_centric_app/widgets/app_button.dart';
 import 'package:student_centric_app/widgets/padding_widget.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -31,7 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     // Fetch the posts when the screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<PostsProvider>(context, listen: false).fetchHomeFeed();
+      // Provider.of<PostsProvider>(context, listen: false).fetchHomeFeed();
+      context.read<HomeBloc>().add(GetFeeds());
     });
   }
 
@@ -81,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           child: CircleAvatar(
                             radius: 24.r,
-                            child: Icon(
+                            child: const Icon(
                               Icons.close,
                             ),
                           ),
@@ -108,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     20.verticalSpace,
                     ListTile(
                       onTap: () {
-                        context.push(ProfileScreen());
+                        context.push(const ProfileScreen());
                       },
                       contentPadding: EdgeInsets.zero,
                       leading: SvgPicture.asset(
@@ -197,65 +198,91 @@ class _HomeScreenState extends State<HomeScreen> {
           10.horizontalSpace,
         ],
       ),
-      body: isLoading
-          ? Skeletonizer(
-              enabled: true,
-              child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return const FeedPostsContainer(
-                      images: [
-                        'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800',
-                        'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800',
-                        'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800'
-                      ],
-                      videos: [
-                        'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800',
-                        'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800',
-                        'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800'
-                      ],
-                      userName: 'Mock data',
-                      timeAgo: 'Mock Time',
-                      postContent: 'Mock Content');
-                },
-              ))
-          : posts.isEmpty
-              ? const Center(
-                  child: Text("No feeds available"),
-                )
-              : SingleChildScrollView(
-                  child: Column(
-                    children: posts.map((post) {
-                      return GestureDetector(
-                        onTap: (){
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => FeedDetails(post: post,),
-                            ),
+      body: Column(
+        children: [
+          Expanded(
+            child: BlocBuilder<HomeBloc, HomeState>(
+              builder: (context, state) {
+                if (state.status == HomeStatus.error && state.posts == null) {
+                  return Text(state.error!.message);
+                } else if (state.status == HomeStatus.loading &&
+                    state.posts == null) {
+                  return Skeletonizer(
+                      enabled: true,
+                      child: ListView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, index) {
+                          return const FeedPostsContainer(
+                            images: [
+                              'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800',
+                              'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800',
+                              'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800'
+                            ],
+                            videos: [
+                              'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800',
+                              'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800',
+                              'https://images.pexels.com/photos/301926/pexels-photo-301926.jpeg?auto=compress&cs=tinysrgb&w=800'
+                            ],
+                            userName: 'Mock data',
+                            timeAgo: 'Mock Time',
+                            postContent: 'Mock Content',
                           );
                         },
-                        child: FeedPostsContainer(
-                          userName: "${post.user?.firstName} ${post.user?.lastName}" ??
-                                  "Default User",
-                          timeAgo: timeago.format(DateTime.parse(post.createdAt ?? '')),
-                          postContent: post.content ?? "",
-                          images: post.fileUploads
-                              ?.where((e) => e.fileType == FileTypeEnums.image.name)
-                              .map((e) => e.normalUrl ?? '')
-                              .toList() ?? [],
-                          videos:post.fileUploads
-                              ?.where((e) => e.fileType == FileTypeEnums.video.name)
-                              .map((e) => e.normalUrl ?? '')
-                              .toList() ?? [],
-                          pollTypeTitle: post.pollTypeTitle,
-                          pollAnswers: post.pollAnswer?.split(","),
-                          voiceNoteUrl: null,
-                        ),
-                      );
-                    }).toList(),
-                  ).padHorizontal,
-                ),
+                      ));
+                } else if (state.posts != null) {
+                  final posts = state.posts!.data;
+                  return ListView.separated(
+                      itemCount: posts!.length,
+                      separatorBuilder: (context, index) {
+                        return SizedBox(
+                          height: 15.h,
+                        );
+                      },
+                      itemBuilder: (context, index) {
+                        final post = posts[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => FeedDetails(
+                                  post: post,
+                                ),
+                              ),
+                            );
+                          },
+                          child: FeedPostsContainer(
+                            userName:
+                                "${post.user?.firstName} ${post.user?.lastName}" ??
+                                    "Default User",
+                            timeAgo: timeago
+                                .format(DateTime.parse(post.createdAt ?? '')),
+                            postContent: post.content ?? "",
+                            images: post.fileUploads
+                                    ?.where((e) =>
+                                        e.fileType == FileTypeEnums.image.name)
+                                    .map((e) => e.normalUrl ?? '')
+                                    .toList() ??
+                                [],
+                            videos: post.fileUploads
+                                    ?.where((e) =>
+                                        e.fileType == FileTypeEnums.video.name)
+                                    .map((e) => e.normalUrl ?? '')
+                                    .toList() ??
+                                [],
+                            pollTypeTitle: post.pollTypeTitle,
+                            pollAnswers: post.pollAnswer?.split(","),
+                            voiceNoteUrl: null,
+                          ),
+                        ).padHorizontal;
+                      });
+                }
+                return const CircularProgressIndicator();
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

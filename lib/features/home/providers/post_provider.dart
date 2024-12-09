@@ -2,12 +2,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/network/api_service.dart';
 import 'package:dio/dio.dart';
 import 'package:student_centric_app/features/home/models/posts_model.dart';
 
-import '../../dashboard/screens/dashboard_screen.dart';
 
 enum FileTypeEnums { video, image }
 enum PostTypeEnums {feed,community,status}

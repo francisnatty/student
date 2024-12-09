@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart'; // Ensure Provider is imported
 import 'package:student_centric_app/core/utils/app_colors.dart';
-import 'package:student_centric_app/core/utils/bottom_sheets.dart';
 import 'package:student_centric_app/features/auth/providers/auth_provider.dart'; // Import AuthProvider
 import 'package:student_centric_app/features/auth/widgets/auth_appbar.dart';
 import 'package:student_centric_app/widgets/app_button.dart';
 import 'package:student_centric_app/widgets/app_textfield.dart';
-import 'package:student_centric_app/widgets/padding_widget.dart';
 
 class EnterPhoneNumberScreen extends StatefulWidget {
   const EnterPhoneNumberScreen({super.key});
@@ -114,7 +112,7 @@ class _EnterPhoneNumberScreenState extends State<EnterPhoneNumberScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
       ),
       builder: (context) {
-        TextEditingController _searchController = TextEditingController();
+        TextEditingController searchController = TextEditingController();
         List<Map<String, String>> filteredCountryCodes =
             List.from(countryCodes);
 
@@ -156,7 +154,7 @@ class _EnterPhoneNumberScreenState extends State<EnterPhoneNumberScreen> {
                   SizedBox(height: 16.h),
                   // Search TextField
                   TextField(
-                    controller: _searchController,
+                    controller: searchController,
                     onChanged: (value) {
                       setModalState(() {
                         filteredCountryCodes = countryCodes.where((country) {
@@ -167,7 +165,7 @@ class _EnterPhoneNumberScreenState extends State<EnterPhoneNumberScreen> {
                     },
                     decoration: InputDecoration(
                       hintText: 'Search country',
-                      prefixIcon: Icon(Icons.search),
+                      prefixIcon: const Icon(Icons.search),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.r),
                       ),
@@ -231,7 +229,7 @@ class _EnterPhoneNumberScreenState extends State<EnterPhoneNumberScreen> {
         Provider.of<AuthProvider>(context); // Access AuthProvider
 
     return Scaffold(
-      appBar: AuthAppbar(),
+      appBar: const AuthAppbar(),
       body: Padding(
         padding:
             EdgeInsets.symmetric(horizontal: 16.w), // Adjust padding as needed
@@ -289,9 +287,9 @@ class _EnterPhoneNumberScreenState extends State<EnterPhoneNumberScreen> {
                 ),
               ),
             ),
-            Spacer(), // Spacer pushes the next widget to the bottom
+            const Spacer(), // Spacer pushes the next widget to the bottom
             authProvider.isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : AppButton.primary(
                     text: "Proceed",
                     onPressed: () async {
@@ -302,7 +300,7 @@ class _EnterPhoneNumberScreenState extends State<EnterPhoneNumberScreen> {
                       if (email == null || email.isEmpty) {
                         // Handle missing email
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                             content:
                                 Text("Email is missing. Please sign up again."),
                           ),
@@ -313,7 +311,7 @@ class _EnterPhoneNumberScreenState extends State<EnterPhoneNumberScreen> {
                       if (_phoneController.text.trim().isEmpty) {
                         // Handle empty phone number
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                             content: Text("Please enter a valid phone number."),
                           ),
                         );

@@ -49,7 +49,7 @@ class _OccupationInputScreenState extends State<OccupationInputScreen> {
             SelectBottomSheet(
               label: "Industry",
               hintText: "Select Industry",
-              items: [
+              items: const [
                 "Education",
                 "Technology",
                 "Social Media/Networking",
@@ -81,7 +81,7 @@ class _OccupationInputScreenState extends State<OccupationInputScreen> {
             SelectBottomSheet(
               label: "Specialty",
               hintText: "Select Specialty",
-              items: [
+              items: const [
                 "Academic Support",
                 "STEM (Science, Technology, Engineering, Mathematics)",
                 "Arts & Humanities",

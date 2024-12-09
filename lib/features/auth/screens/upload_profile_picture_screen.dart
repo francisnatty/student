@@ -39,20 +39,20 @@ class _UploadProfilePictureScreenState
   }
 
   /// Method to handle the upload process
-  Future<void> _handleUpload() async {
-    if (_imageFile == null) return;
+  // Future<void> _handleUpload() async {
+  //   if (_imageFile == null) return;
 
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+  //   final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    final storage = SecureStorage();
-    String? email = await storage.get(key: 'email');
+  //   final storage = SecureStorage();
+  //   String? email = await storage.get(key: 'email');
 
-    await authProvider.uploadProfilePicture(
-      email: email!,
-      profileImage: _imageFile!,
-      context: context,
-    );
-  }
+  //   await authProvider.uploadProfilePicture(
+  //     email: email!,
+  //     profileImage: _imageFile!,
+  //     context: context,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

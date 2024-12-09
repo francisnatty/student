@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'app_textfield.dart'; // Ensure the correct import path
 import 'package:student_centric_app/core/utils/app_colors.dart';
 
@@ -9,11 +8,11 @@ class SelectDatePicker extends StatefulWidget {
   final TextEditingController? controller;
 
   const SelectDatePicker({
-    Key? key,
+    super.key,
     this.label,
     required this.hintText,
     this.controller,
-  }) : super(key: key);
+  });
 
   @override
   _SelectDatePickerState createState() => _SelectDatePickerState();
@@ -31,7 +30,7 @@ class _SelectDatePickerState extends State<SelectDatePicker> {
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
+            colorScheme: const ColorScheme.light(
               primary: Colors.white, // header background color
               onPrimary: Colors.white, // header text color
               onSurface: Colors.black, // body text color
@@ -65,7 +64,7 @@ class _SelectDatePickerState extends State<SelectDatePicker> {
       controller: widget.controller,
       readOnly: true, // Make the text field read-only
       onTap: _showDatePicker, // Trigger date picker on tap
-      suffixIcon: Icon(
+      suffixIcon: const Icon(
         Icons.calendar_today_outlined,
         color: AppColors.blackThree,
       ), // Calendar icon

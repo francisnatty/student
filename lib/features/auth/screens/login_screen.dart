@@ -3,12 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart'; // Ensure you have provider added
-import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/features/auth/providers/auth_provider.dart';
 import 'package:student_centric_app/features/auth/screens/forgort_password_screen.dart';
 import 'package:student_centric_app/features/auth/screens/sign_up_screen.dart';
-import 'package:student_centric_app/features/dashboard/screens/dashboard_screen.dart';
 import 'package:student_centric_app/widgets/app_button.dart';
 import 'package:student_centric_app/widgets/app_textfield.dart';
 import 'package:student_centric_app/widgets/password_criteria.dart';

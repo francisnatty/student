@@ -6,7 +6,7 @@ import 'package:student_centric_app/widgets/select_date_picker.dart';
 import 'package:student_centric_app/widgets/selector_bottom_sheet.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({Key? key}) : super(key: key);
+  const EditProfileScreen({super.key});
 
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
@@ -29,14 +29,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.more_vert, color: Colors.black),
+            icon: const Icon(Icons.more_vert, color: Colors.black),
             onPressed: () {
               // Handle menu actions
             },
@@ -54,7 +54,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   children: [
                     CircleAvatar(
                       radius: 50.r,
-                      backgroundImage: AssetImage(
+                      backgroundImage: const AssetImage(
                         'assets/images/profile_placeholder.png',
                       ), // Replace with your image asset
                     ),
@@ -63,7 +63,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       right: 0,
                       child: Container(
                         padding: EdgeInsets.all(6.r),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: AppColors.primaryColor,
                         ),
@@ -96,7 +96,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               SelectBottomSheet(
                 label: "Gender",
                 hintText: "Select Gender",
-                items: [
+                items: const [
                   "Male",
                   "Female",
                   "Non-Binary",
@@ -124,7 +124,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               SelectBottomSheet(
                 label: "Ethnicity",
                 hintText: "Select Ethnicity",
-                items: [
+                items: const [
                   "Native American",
                   "Southeast Asian",
                   "Black/African Descent",
@@ -144,7 +144,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               SelectBottomSheet(
                 label: "Religion",
                 hintText: "Select Religion",
-                items: [
+                items: const [
                   "Atheist",
                   "Agnostic",
                   "Spiritual",
@@ -164,7 +164,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               SelectBottomSheet(
                 label: "Marital Status",
                 hintText: "Select Marital Status",
-                items: [
+                items: const [
                   "Single",
                   "Married",
                   "Civil Partnership",

@@ -130,8 +130,8 @@ class ExploreTab extends StatelessWidget {
                     ),
                   ),
                 );
-              }).toList(),
-              Spacer(),
+              }),
+              const Spacer(),
               // Members count
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),

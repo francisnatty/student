@@ -1,9 +1,7 @@
 // community_tab.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/features/home/providers/post_provider.dart';
 import 'package:student_centric_app/features/home/widgets/feed_posts_container.dart';
 
@@ -18,7 +16,7 @@ class CommunityTab extends StatelessWidget {
         final isLoading = postsProvider.isFetching;
 
         if (isLoading) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }
@@ -73,7 +71,7 @@ class CommunityTab extends StatelessWidget {
                       voiceNoteUrl: '',
                     ),
                   );
-                }).toList(),
+                }),
               ],
             ),
           ),

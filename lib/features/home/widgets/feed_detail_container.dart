@@ -152,21 +152,25 @@ class FeedDetailContainer extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () async {
+                          //here likeButton
                           debugPrint("like clicked====>");
                           await viewModel.likeFeed(
-                              feedId: feedId.toString() ?? '',
-                              context: context);
+                            feedId: feedId.toString() ?? '',
+                            context: context,
+                          );
                         },
-                        child: (viewModel.isLike)?SvgPicture.asset(
-                          color: AppColors.primaryColor,
-                          AppAssets.likeIcon,
-                          height: 20.h,
-                          width: 20.w,
-                        ):SvgPicture.asset(
-                          AppAssets.likeIcon,
-                          height: 20.h,
-                          width: 20.w,
-                        ),
+                        child: (viewModel.isLike)
+                            ? SvgPicture.asset(
+                                color: AppColors.primaryColor,
+                                AppAssets.likeIcon,
+                                height: 20.h,
+                                width: 20.w,
+                              )
+                            : SvgPicture.asset(
+                                AppAssets.likeIcon,
+                                height: 20.h,
+                                width: 20.w,
+                              ),
                       ),
                       SizedBox(width: 6.w),
                       Text(
@@ -211,7 +215,7 @@ class MediaCarousel extends StatefulWidget {
 
 class _MediaCarouselState extends State<MediaCarousel> {
   late final PageController _pageController;
-  int _currentPage = 0;
+  final int _currentPage = 0;
 
   @override
   void initState() {

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
-import 'package:student_centric_app/core/utils/bottom_sheets.dart';
 import 'package:student_centric_app/features/auth/providers/basic_information_provider.dart';
 import 'package:student_centric_app/features/auth/screens/address_input_screen.dart';
 import 'package:student_centric_app/features/auth/screens/info_screen.dart';
@@ -33,7 +32,7 @@ class BasicInformationScreen extends StatelessWidget {
                 SmoothPageIndicator(
                   controller: pageProvider.pageController,
                   count: 4,
-                  effect: ExpandingDotsEffect(
+                  effect: const ExpandingDotsEffect(
                     dotHeight: 8.0,
                     dotWidth: 16.0,
                     activeDotColor: AppColors.primaryColor,
@@ -46,7 +45,7 @@ class BasicInformationScreen extends StatelessWidget {
                 // Expanded widget wraps PageView to take remaining space
                 Expanded(
                   child: PageView(
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     controller: pageProvider.pageController,
                     onPageChanged: (index) {
                       pageProvider.setPage(index);

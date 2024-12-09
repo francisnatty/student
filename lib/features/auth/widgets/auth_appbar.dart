@@ -41,7 +41,7 @@ class AuthAppbar extends StatelessWidget implements PreferredSizeWidget {
           child: Container(
             width: 55.w,
             height: 55.h,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: AppColors.greyTwo,
               shape: BoxShape.circle,
             ),

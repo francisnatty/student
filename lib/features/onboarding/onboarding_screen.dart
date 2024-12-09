@@ -7,7 +7,6 @@ import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/features/auth/screens/login_screen.dart';
 import 'package:student_centric_app/features/auth/screens/sign_up_screen.dart';
-import 'package:student_centric_app/main.dart';
 import 'package:student_centric_app/widgets/app_button.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -45,7 +44,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         }
         _pageController.animateToPage(
           nextPage,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.easeIn,
         );
       }
@@ -149,7 +148,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     text: 'Login',
                     onPressed: () {
                       // Handle Login
-                      context.push(LoginScreen());
+                      context.push(const LoginScreen());
                     },
                   ),
                 ],

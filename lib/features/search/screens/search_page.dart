@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
-import 'package:student_centric_app/features/home/home_screen.dart';
 import 'package:student_centric_app/widgets/app_textfield.dart';
 import 'package:student_centric_app/widgets/padding_widget.dart';
 
@@ -25,7 +24,7 @@ class SearchPage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: CircleAvatar(),
+            icon: const CircleAvatar(),
           ),
         ],
       ),
@@ -85,25 +84,25 @@ class SearchPage extends StatelessWidget {
             ],
           ),
           20.verticalSpace,
-          SearchScreenTile(
+          const SearchScreenTile(
             trendingWhere: "Trending in your school",
             trendingContents: "2025/2026 Admission",
             numberOfPosts: "78.7K posts",
           ),
           10.verticalSpace,
-          SearchScreenTile(
+          const SearchScreenTile(
             trendingWhere: "Trending in your school",
             trendingContents: "2025/2026 Admission",
             numberOfPosts: "78.7K posts",
           ),
           10.verticalSpace,
-          SearchScreenTile(
+          const SearchScreenTile(
             trendingWhere: "Trending in your school",
             trendingContents: "2025/2026 Admission",
             numberOfPosts: "78.7K posts",
           ),
           10.verticalSpace,
-          SearchScreenTile(
+          const SearchScreenTile(
             trendingWhere: "Trending in your school",
             trendingContents: "2025/2026 Admission",
             numberOfPosts: "78.7K posts",

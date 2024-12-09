@@ -3,12 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/features/auth/providers/basic_information_provider.dart';
-import 'package:student_centric_app/features/auth/widgets/auth_appbar.dart';
 import 'package:student_centric_app/widgets/app_button.dart';
 import 'package:student_centric_app/widgets/app_textfield.dart';
-import 'package:student_centric_app/widgets/padding_widget.dart';
 import 'package:student_centric_app/widgets/selector_bottom_sheet.dart';
 
 class AddressInputScreen extends StatefulWidget {
@@ -55,15 +52,13 @@ class _AddressInputScreenState extends State<AddressInputScreen> {
       (country) => country.name == selectedCountryName,
     );
 
-    if (selectedCountry != null) {
-      // Fetch cities for the selected country
-      provider.fetchCities(selectedCountry:selectedCountry);
-      debugPrint("get cities from county ${selectedCountry.name}");
-      // Clear the city selection
+    // Fetch cities for the selected country
+    provider.fetchCities(selectedCountry:selectedCountry);
+    debugPrint("get cities from county ${selectedCountry.name}");
+    // Clear the city selection
 
-      cityController.text = '';
+    cityController.text = '';
     }
-  }
 
   @override
   Widget build(BuildContext context) {

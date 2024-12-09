@@ -8,7 +8,6 @@ import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/core/utils/fcm.dart';
 import 'package:student_centric_app/features/chats/screens/chat_screen.dart';
-import 'package:student_centric_app/features/chats/screens/incomming_call_screen.dart';
 import 'package:student_centric_app/features/chats/screens/incomming_video_call_screen.dart';
 import 'package:student_centric_app/features/community/screens/community_page.dart';
 import 'package:student_centric_app/features/dashboard/providers/bottom_nav_provider.dart';
@@ -36,11 +35,11 @@ class _DashboardScreenState extends State<DashboardScreen>
   }
 
   final List<Widget> _pages = [
-    HomeScreen(),
-    ChatScreen(),
-    SearchPage(),
-    TasksPage(),
-    CommunityPage(),
+    const HomeScreen(),
+    const ChatScreen(),
+    const SearchPage(),
+    const TasksPage(),
+    const CommunityPage(),
   ];
 
   @override
@@ -57,7 +56,7 @@ class _DashboardScreenState extends State<DashboardScreen>
                 topLeft: Radius.circular(22.r),
                 topRight: Radius.circular(22.r),
               ),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
                   blurRadius: 10.0,
@@ -65,7 +64,7 @@ class _DashboardScreenState extends State<DashboardScreen>
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(10.0),
                 topRight: Radius.circular(10.0),
               ),
@@ -125,88 +124,88 @@ class _DashboardScreenState extends State<DashboardScreen>
               ),
             ),
           ),
-          floatingActionButton: provider.selectedIndex == 0 ||
-                  provider.selectedIndex == 3
-              ? Container(
-                  width: 60.w, // Set width to 60
-                  height: 60.h, // Set height to 60
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: [
-                        AppColors.primaryColor, // Starting color
-                        AppColors
-                            .primaryFour, // Ending color (define in AppColors)
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 10.0,
-                        offset: Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      // Action for the FAB based on selected page
-                      if (provider.selectedIndex == 1) {
-                        final currentUserId =
-                            context.account.user!.id.toString();
-                        String generateChannelName(
-                            String userId1, String userId2) {
-                          // Sort the IDs to ensure the same channel name regardless of who calls who
-                          final sortedIds = [userId1, userId2]..sort();
-                          return 'call_${sortedIds[0]}_${sortedIds[1]}';
-                        }
-
-                        final channelName =
-                            generateChannelName(currentUserId, "25");
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => IncomingVideoCallScreen(
-                              callerId: "Samuel Salami",
-                              channelName: channelName,
-                            ),
+          floatingActionButton:
+              provider.selectedIndex == 0 || provider.selectedIndex == 3
+                  ? Container(
+                      width: 60.w, // Set width to 60
+                      height: 60.h, // Set height to 60
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.primaryColor, // Starting color
+                            AppColors
+                                .primaryFour, // Ending color (define in AppColors)
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 10.0,
+                            offset: Offset(0, 4),
                           ),
-                        );
-                      } else if (provider.selectedIndex == 3) {
-                        context.push(AddTaskScreen());
-                      } else {
-                        context.push(AddPostScreen());
-                      }
-                    },
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.r),
-                    ),
-                    child: Builder(
-                      builder: (context) {
-                        if (provider.selectedIndex == 1) {
-                          return SvgPicture.asset(
-                            AppAssets.messageIconAlt,
-                          );
-                        } else if (provider.selectedIndex == 3) {
-                          return SvgPicture.asset(
-                            AppAssets.inactiveTasksIcon,
-                            color: Colors.white,
-                          );
-                        } else {
-                          return Icon(
-                            Icons.add,
-                            color: Colors.white,
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                )
-              : SizedBox.shrink(),
+                        ],
+                      ),
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          // Action for the FAB based on selected page
+                          if (provider.selectedIndex == 1) {
+                            final currentUserId =
+                                context.account.user!.id.toString();
+                            String generateChannelName(
+                                String userId1, String userId2) {
+                              // Sort the IDs to ensure the same channel name regardless of who calls who
+                              final sortedIds = [userId1, userId2]..sort();
+                              return 'call_${sortedIds[0]}_${sortedIds[1]}';
+                            }
+
+                            final channelName =
+                                generateChannelName(currentUserId, "25");
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => IncomingVideoCallScreen(
+                                  callerId: "Samuel Salami",
+                                  channelName: channelName,
+                                ),
+                              ),
+                            );
+                          } else if (provider.selectedIndex == 3) {
+                            context.push(AddTaskScreen());
+                          } else {
+                            context.push(const AddPostScreen());
+                          }
+                        },
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.r),
+                        ),
+                        child: Builder(
+                          builder: (context) {
+                            if (provider.selectedIndex == 1) {
+                              return SvgPicture.asset(
+                                AppAssets.messageIconAlt,
+                              );
+                            } else if (provider.selectedIndex == 3) {
+                              return SvgPicture.asset(
+                                AppAssets.inactiveTasksIcon,
+                                color: Colors.white,
+                              );
+                            } else {
+                              return const Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         );
       },

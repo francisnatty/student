@@ -3,11 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/extensions/account_extension.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
-import 'package:student_centric_app/features/auth/providers/auth_provider.dart';
 import 'package:student_centric_app/features/chats/providers/call_provider.dart';
 import 'package:student_centric_app/widgets/padding_widget.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
@@ -74,7 +72,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
   }
 
   Future<void> _initAgoraEngine(String token) async {
-    _engine = await createAgoraRtcEngine();
+    _engine = createAgoraRtcEngine();
     await _engine!.initialize(RtcEngineContext(
       appId: appId,
       channelProfile: ChannelProfileType.channelProfileCommunication,
@@ -161,7 +159,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                 Container(
                   width: 50.w,
                   height: 50.h,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColors.greyTwo,
                     shape: BoxShape.circle,
                   ),
@@ -190,12 +188,12 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
                           ),
                         ),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
                 // Add participant button
                 Container(
                   width: 50.w,
                   height: 50.h,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColors.greyTwo,
                     shape: BoxShape.circle,
                   ),
@@ -218,7 +216,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
               ),
             ),
             _isCallActive
-                ? SizedBox()
+                ? const SizedBox()
                 : Text(
                     "Calling...",
                     textAlign: TextAlign.center,
@@ -244,7 +242,7 @@ class _AudioCallScreenState extends State<AudioCallScreen> {
             //   radius: 95.r,
             //   backgroundImage: AssetImage("assets/images/avatar.png"),
             // ),
-            Spacer(),
+            const Spacer(),
             Padding(
               padding: EdgeInsets.only(bottom: 20.h),
               child: Container(

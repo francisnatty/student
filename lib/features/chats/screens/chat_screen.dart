@@ -6,18 +6,18 @@ import 'package:flutter_svg/svg.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/features/chats/models/chat_user.dart';
 import 'package:student_centric_app/features/chats/module/chat_option.dart';
 import 'package:student_centric_app/features/chats/providers/chat_provider.dart';
 import 'package:student_centric_app/features/chats/screens/individual_chat_screen.dart';
+import 'package:student_centric_app/features/chats/screens/status.dart';
+import 'package:student_centric_app/features/home/bloc/home_bloc.dart';
 import 'package:student_centric_app/widgets/app_textfield.dart';
 
 import '../../../core/utils/bottom_sheets.dart';
 import '../../auth/providers/auth_provider.dart';
-import '../../auth/widgets/otp_verification.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -32,7 +32,8 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     // Fetch chats when the screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<ChatProvider>(context, listen: false).fetchChats();
+      context.read<HomeBloc>().add(GetStatus());
+      // Provider.of<ChatProvider>(context, listen: false).fetchChats();
     });
   }
 
@@ -79,12 +80,13 @@ class _ChatScreenState extends State<ChatScreen> {
               height: 90.h,
               child: ListView(
                 scrollDirection: Axis.horizontal,
-                children: [
-                  _StatusAvatar(
-                    name: "Samuel Salami",
-                    imageUrl: "assets/images/avatar.png",
-                    statusCount: 3,
-                  ),
+                children: const [
+                  StatusView()
+                  // _StatusAvatar(
+                  //   name: "Samuel Salami",
+                  //   imageUrl: "assets/images/avatar.png",
+                  //   statusCount: 3,
+                  // ),
                 ],
               ),
             ),
@@ -121,7 +123,10 @@ class _ChatScreenState extends State<ChatScreen> {
                           final ChatUser chatUser = chatProvider.chats[index];
                           return GestureDetector(
                             onTap: () {
-                              var authProvider = Provider.of<AuthProvider>(context,listen: false).user;
+                              var authProvider = Provider.of<AuthProvider>(
+                                      context,
+                                      listen: false)
+                                  .user;
                               var receiverId = chatUser.id;
                               print("receiver id => $receiverId");
                               int senderId = authProvider?.id ?? 0;
@@ -298,55 +303,4 @@ class StatusBorderPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
-}
-
-class _StatusAvatar extends StatelessWidget {
-  final String name;
-  final String imageUrl;
-  final int statusCount; // Number of status posts
-
-  const _StatusAvatar({
-    Key? key,
-    required this.name,
-    required this.imageUrl,
-    this.statusCount = 1,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    double outerRadius = 30.r; // Increased from 28.r to 30.r
-    double innerRadius = 23.r; // Decreased from 25.r to 23.r
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.w),
-      child: Column(
-        children: [
-          SizedBox(
-            width: outerRadius * 2,
-            height: outerRadius * 2,
-            child: CustomPaint(
-              painter: StatusBorderPainter(
-                statusCount: statusCount,
-                color: AppColors.primaryColor,
-                strokeWidth: 3, // Match the strokeWidth here
-              ),
-              child: Center(
-                child: CircleAvatar(
-                  radius: 24.r,
-                  child: SvgPicture.asset(
-                    AppAssets.profileIcon,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            name,
-            style: TextStyle(fontSize: 12.sp),
-          ),
-        ],
-      ),
-    );
-  }
 }

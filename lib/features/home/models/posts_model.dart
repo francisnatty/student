@@ -1,19 +1,17 @@
 class PostModel {
   List<Post>? data;
   bool? error;
-  String? msg;
 
-  PostModel({this.data, this.error, this.msg});
+  PostModel({this.data, this.error});
 
   PostModel.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
       data = <Post>[];
-      json['data'].forEach((v) {
+      for (var v in json['data']) {
         data!.add(Post.fromJson(v));
-      });
+      }
     }
     error = json['error'];
-    msg = json['msg'];
   }
 
   Map<String, dynamic> toJson() {
@@ -22,7 +20,6 @@ class PostModel {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     data['error'] = error;
-    data['msg'] = msg;
     return data;
   }
 }
@@ -43,31 +40,32 @@ class Post {
   String? createdAt;
   String? updatedAt;
   User? user;
-  List<Null>? polls;
   List<FileUploads>? fileUploads;
   List<CommentOnFeeds>? commentOnFeeds;
   List<LikeOnFeeds>? likeOnFeeds;
+  bool? isLiked;
 
-  Post(
-      {this.id,
-        this.postType,
-        this.userId,
-        this.title,
-        this.subtitle,
-        this.content,
-        this.longitude,
-        this.lagtitude,
-        this.pollTypeTitle,
-        this.pollAnswer,
-        this.link,
-        this.status,
-        this.createdAt,
-        this.updatedAt,
-        this.user,
-        this.polls,
-        this.fileUploads,
-        this.commentOnFeeds,
-        this.likeOnFeeds});
+  Post({
+    this.id,
+    this.postType,
+    this.userId,
+    this.title,
+    this.subtitle,
+    this.content,
+    this.longitude,
+    this.lagtitude,
+    this.pollTypeTitle,
+    this.pollAnswer,
+    this.link,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+    this.user,
+    this.fileUploads,
+    this.commentOnFeeds,
+    this.likeOnFeeds,
+    this.isLiked = false,
+  });
 
   Post.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -85,12 +83,6 @@ class Post {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     user = json['User'] != null ? User.fromJson(json['User']) : null;
-    // if (json['Polls'] != null) {
-    //   polls = <Null>[];
-    //   json['Polls'].forEach((v) {
-    //     polls!.add(Null.fromJson(v));
-    //   });
-    // }
     if (json['FileUploads'] != null) {
       fileUploads = <FileUploads>[];
       json['FileUploads'].forEach((v) {
@@ -130,20 +122,22 @@ class Post {
     if (user != null) {
       data['User'] = user!.toJson();
     }
-    // if (polls != null) {
-    //   data['Polls'] = polls!.map((v) => v.toJson()).toList();
-    // }
     if (fileUploads != null) {
       data['FileUploads'] = fileUploads!.map((v) => v.toJson()).toList();
     }
     if (commentOnFeeds != null) {
-      data['CommentOnFeeds'] =
-          commentOnFeeds!.map((v) => v.toJson()).toList();
+      data['CommentOnFeeds'] = commentOnFeeds!.map((v) => v.toJson()).toList();
     }
     if (likeOnFeeds != null) {
       data['LikeOnFeeds'] = likeOnFeeds!.map((v) => v.toJson()).toList();
     }
     return data;
+  }
+
+  void updateIsLiked(String currentUserId) {
+    isLiked =
+        likeOnFeeds?.any((like) => like.feedLike.toString() == currentUserId) ??
+            false;
   }
 }
 
@@ -241,7 +235,7 @@ class LikeOnFeeds {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['feedLike'] = this.feedLike;
+    data['feedLike'] = feedLike;
     return data;
   }
 }

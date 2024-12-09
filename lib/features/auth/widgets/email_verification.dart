@@ -5,9 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart'; // Import Provider
 import 'package:student_centric_app/features/auth/providers/auth_provider.dart';
-import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
-import 'package:student_centric_app/features/auth/screens/enter_phone_number.dart';
 import 'package:student_centric_app/widgets/app_button.dart';
 import 'package:student_centric_app/widgets/padding_widget.dart';
 import 'package:student_centric_app/widgets/selector_loader.dart';
@@ -157,7 +155,7 @@ class _EmailOtpVerificationState extends State<EmailOtpVerification> {
               ),
               child: Center(
                 child: isSendingOtp
-                    ? SelectorLoader()
+                    ? const SelectorLoader()
                     : Text.rich(
                         style: TextStyle(
                           fontSize: 14.sp,
@@ -165,7 +163,7 @@ class _EmailOtpVerificationState extends State<EmailOtpVerification> {
                         TextSpan(
                           children: [
                             if (_secondsRemaining > 1) ...{
-                              TextSpan(
+                              const TextSpan(
                                 text: 'Resend Code in ',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -175,7 +173,7 @@ class _EmailOtpVerificationState extends State<EmailOtpVerification> {
                               TextSpan(
                                 text:
                                     '${_secondsRemaining ~/ 60}:${(_secondsRemaining % 60).toString().padLeft(2, '0')}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.primaryColor,
                                 ),

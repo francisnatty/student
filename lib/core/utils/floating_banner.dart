@@ -98,7 +98,7 @@ class BannerManager {
     );
 
     // Insert the banner into the Overlay
-    Overlay.of(context)?.insert(_currentBanner!);
+    Overlay.of(context).insert(_currentBanner!);
 
     // Auto dismiss after the specified duration
     Future.delayed(duration, () {

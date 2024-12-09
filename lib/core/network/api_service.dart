@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter/foundation.dart'; // For kDebugMode
@@ -52,7 +51,7 @@ class ApiService {
         _processResponse(response);
         return handler.next(response);
       },
-      onError: (DioError error, handler) {
+      onError: (DioException error, handler) {
         debugPrint("error here => ${error.toString()}");
         _logError(error);
         _processError(error);
@@ -90,7 +89,7 @@ class ApiService {
       );
 
       return response;
-    } on DioError {
+    } on DioException {
       // Error handling is managed in interceptors
       return null;
     }
@@ -128,7 +127,7 @@ class ApiService {
       );
 
       return response;
-    } on DioError {
+    } on DioException {
       // Error handling is managed in interceptors
       return null;
     }
@@ -162,7 +161,7 @@ class ApiService {
       );
 
       return response;
-    } on DioError {
+    } on DioException {
       // Error handling is managed in interceptors
       return null;
     }
@@ -195,7 +194,7 @@ class ApiService {
       );
 
       return response;
-    } on DioError {
+    } on DioException {
       // Error handling is managed in interceptors
       return null;
     }
@@ -228,7 +227,7 @@ class ApiService {
       );
 
       return response;
-    } on DioError {
+    } on DioException {
       // Error handling is managed in interceptors
       return null;
     }
@@ -236,19 +235,19 @@ class ApiService {
 
   // ... rest of your class remained
   // Handle Dio errors
-  void _handleDioError(DioError error, bool showBanner) {
+  void _handleDioError(DioException error, bool showBanner) {
     String errorMessage = "An unexpected error occurred";
 
-    if (error.type == DioErrorType.connectionTimeout) {
+    if (error.type == DioExceptionType.connectionTimeout) {
       errorMessage = "Connection timed out";
-    } else if (error.type == DioErrorType.receiveTimeout) {
+    } else if (error.type == DioExceptionType.receiveTimeout) {
       errorMessage = "Receive timed out";
-    } else if (error.type == DioErrorType.badResponse) {
+    } else if (error.type == DioExceptionType.badResponse) {
       errorMessage = error.response?.data['message'] ??
           "Received invalid status code: ${error.response?.statusCode}";
-    } else if (error.type == DioErrorType.cancel) {
+    } else if (error.type == DioExceptionType.cancel) {
       errorMessage = "Request was cancelled";
-    } else if (error.type == DioErrorType.unknown) {
+    } else if (error.type == DioExceptionType.unknown) {
       errorMessage = "No internet connection";
     }
 
@@ -305,7 +304,7 @@ class ApiService {
     }
   }
 
-  void _logError(DioError error) {
+  void _logError(DioException error) {
     if (kDebugMode) {
       _logger.e("===== API Error =====");
       if (error.response != null) {
@@ -377,7 +376,7 @@ class ApiService {
   }
 
   // Process DioError to trigger onError callback
-  void _processError(DioError error) {
+  void _processError(DioException error) {
     bool showBanner = error.requestOptions.extra['showBanner'] ?? false;
 
     if (showBanner && onError != null) {
@@ -396,18 +395,18 @@ class ApiService {
         // Fallback to default error messages based on status code or error type
         String errorMessage = "An unexpected error occurred";
 
-        if (error.type == DioErrorType.connectionTimeout) {
+        if (error.type == DioExceptionType.connectionTimeout) {
           errorMessage = "Connection timed out";
-        } else if (error.type == DioErrorType.receiveTimeout) {
+        } else if (error.type == DioExceptionType.receiveTimeout) {
           errorMessage = "Receive timed out";
-        } else if (error.type == DioErrorType.badResponse) {
+        } else if (error.type == DioExceptionType.badResponse) {
           debugPrint("derey here =>  ${error.response?.data['msg']??''}");
           errorMessage = error.response?.data != null
               ? "${error.response?.data['msg']??''}"
               : "Bad response from server";
-        } else if (error.type == DioErrorType.cancel) {
+        } else if (error.type == DioExceptionType.cancel) {
           errorMessage = "Request was cancelled";
-        } else if (error.type == DioErrorType.unknown) {
+        } else if (error.type == DioExceptionType.unknown) {
           errorMessage = "No internet connection";
         }
         onError!(errorMessage);

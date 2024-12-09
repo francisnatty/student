@@ -23,8 +23,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
   final TextEditingController _pollChoice1Controller = TextEditingController();
   final TextEditingController _pollChoice2Controller = TextEditingController();
   bool isPollAdded = false;
-  List<File> _selectedImages = [];
-  List<File> _selectedVideos = [];
+  final List<File> _selectedImages = [];
+  final List<File> _selectedVideos = [];
   File? _selectedVoiceNote;
 
   final int maxMediaCount = 4;
@@ -36,8 +36,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
   ];
 
   Future<void> _pickMedia({required bool isImage}) async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? pickedFile = await _picker.pickImage(
+    final ImagePicker picker = ImagePicker();
+    final XFile? pickedFile = await picker.pickImage(
       source: isImage ? ImageSource.gallery : ImageSource.camera,
     );
     if (pickedFile != null) {
@@ -64,7 +64,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   Future<void> _postToFeed() async {
     final postsProvider = Provider.of<PostsProvider>(context, listen: false);
-    debugPrint("selected post Type => ${selectedIndex}");
+    debugPrint("selected post Type => $selectedIndex");
     await postsProvider.postToFeed(
       postType: (selectedIndex == 0)
           ? PostTypeEnums.feed.name

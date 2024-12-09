@@ -12,6 +12,8 @@ import 'package:student_centric_app/features/profile/screens/edit_profile_screen
 import 'package:student_centric_app/widgets/app_button.dart';
 
 class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -26,7 +28,7 @@ class ProfileScreen extends StatelessWidget {
             icon: Container(
               width: 50.w,
               height: 50.h,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.greyTwo,
                 shape: BoxShape.circle,
               ),
@@ -63,7 +65,7 @@ class ProfileScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     // Profile Picture and Info
-                    CircleAvatar(
+                    const CircleAvatar(
                       radius: 50,
                       backgroundImage: NetworkImage(
                           'https://via.placeholder.com/150'), // Replace with actual profile image URL
@@ -80,7 +82,7 @@ class ProfileScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.location_pin, color: Colors.green),
+                        const Icon(Icons.location_pin, color: Colors.green),
                         Text(
                           "Ipswich",
                           style: TextStyle(
@@ -102,7 +104,7 @@ class ProfileScreen extends StatelessWidget {
                     AppButton.primary(
                       text: "Edit Profile",
                       onPressed: () {
-                        context.push(EditProfileScreen());
+                        context.push(const EditProfileScreen());
                       },
                       height: 45.h,
                       width: 137.w,
@@ -115,7 +117,7 @@ class ProfileScreen extends StatelessWidget {
               // Tabs Section
               Container(
                 color: Colors.grey[200],
-                child: TabBar(
+                child: const TabBar(
                   labelColor: Colors.black,
                   unselectedLabelColor: Colors.grey,
                   indicatorColor: Colors.blue,
@@ -138,7 +140,7 @@ class ProfileScreen extends StatelessWidget {
                         final isLoading = postsProvider.isFetching;
 
                         if (isLoading) {
-                          return Center(
+                          return const Center(
                             child: CircularProgressIndicator(),
                           );
                         }
@@ -193,11 +195,11 @@ class ProfileScreen extends StatelessWidget {
                       },
                     ),
                     // Comments Tab
-                    Center(child: Text("Comments Tab Content")),
+                    const Center(child: Text("Comments Tab Content")),
                     // Media Tab
-                    Center(child: Text("Media Tab Content")),
+                    const Center(child: Text("Media Tab Content")),
                     // More Tab
-                    Center(child: Text("More Tab Content")),
+                    const Center(child: Text("More Tab Content")),
                   ],
                 ),
               ),

@@ -244,7 +244,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                 style: TextStyle(fontSize: 14),
               ),
             ),
-            Icon(Icons.keyboard_arrow_down, size: 20),
+            const Icon(Icons.keyboard_arrow_down, size: 20),
           ],
         ),
       ),
@@ -253,7 +253,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   Widget _buildActionItem(String title, IconData icon) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade300),
         borderRadius: BorderRadius.circular(12),
@@ -262,9 +262,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         leading: Icon(icon, color: Colors.grey.shade600),
         title: Text(
           title,
-          style: TextStyle(fontSize: 14),
+          style: const TextStyle(fontSize: 14),
         ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         onTap: () {},
       ),
     );

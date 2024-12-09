@@ -3,12 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/extensions/account_extension.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/features/chats/providers/call_provider.dart';
-import 'package:student_centric_app/widgets/padding_widget.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -76,7 +74,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
   }
 
   Future<void> _initAgoraEngine(String token) async {
-    _engine = await createAgoraRtcEngine();
+    _engine = createAgoraRtcEngine();
     await _engine!.initialize(RtcEngineContext(
       appId: appId,
       channelProfile: ChannelProfileType.channelProfileCommunication,
@@ -119,7 +117,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
     await _engine!.joinChannel(
       token: token,
       channelId: channelName,
-      options: ChannelMediaOptions(
+      options: const ChannelMediaOptions(
         autoSubscribeAudio: true,
         autoSubscribeVideo: true,
         publishCameraTrack: true,
@@ -146,7 +144,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
         ),
       );
     } else {
-      return Center(
+      return const Center(
         child: Text(
           'Joining call...',
           style: TextStyle(color: Colors.white),
@@ -183,7 +181,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
         height: 160,
         child: Container(
           color: Colors.black54,
-          child: Center(
+          child: const Center(
             child: Text(
               'Waiting for user...',
               style: TextStyle(color: Colors.white),
@@ -240,7 +238,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                 Container(
                   width: 50.w,
                   height: 50.h,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColors.greyTwo,
                     shape: BoxShape.circle,
                   ),
@@ -255,7 +253,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                 Container(
                   width: 50.w,
                   height: 50.h,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: AppColors.greyTwo,
                     shape: BoxShape.circle,
                   ),

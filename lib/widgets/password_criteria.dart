@@ -7,10 +7,10 @@ class PasswordCriteria extends StatelessWidget {
   final String label;
 
   const PasswordCriteria({
-    Key? key,
+    super.key,
     required this.isMet,
     required this.label,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

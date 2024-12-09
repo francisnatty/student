@@ -7,12 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pinput/pinput.dart';
 import 'package:provider/provider.dart'; // Ensure Provider is imported
-import 'package:student_centric_app/config/routes/navigation_routes.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/features/auth/providers/auth_provider.dart'; // Import AuthProvider
-import 'package:student_centric_app/features/auth/screens/basic_information_screen.dart';
 import 'package:student_centric_app/widgets/app_button.dart';
-import 'package:student_centric_app/widgets/padding_widget.dart';
 import 'package:student_centric_app/widgets/selector_loader.dart';
 
 const int resendIn = 60;
@@ -170,7 +167,7 @@ class _OtpVerificationState extends State<PhoneNumberOtpVerification> {
                 ),
                 child: Center(
                   child: isSendingOtp
-                      ? SelectorLoader()
+                      ? const SelectorLoader()
                       : Text.rich(
                           style: TextStyle(
                             fontSize: 14.sp,
@@ -178,7 +175,7 @@ class _OtpVerificationState extends State<PhoneNumberOtpVerification> {
                           TextSpan(
                             children: [
                               if (_secondsRemaining > 0) ...{
-                                TextSpan(
+                                const TextSpan(
                                   text: 'Resend Code in ',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -188,7 +185,7 @@ class _OtpVerificationState extends State<PhoneNumberOtpVerification> {
                                 TextSpan(
                                   text:
                                       '${_secondsRemaining ~/ 60}:${(_secondsRemaining % 60).toString().padLeft(2, '0')}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.primaryColor,
                                   ),
@@ -238,13 +235,13 @@ class _OtpVerificationState extends State<PhoneNumberOtpVerification> {
               ),
               20.verticalSpace,
               authProvider.isLoading
-                  ? Center(child: CircularProgressIndicator())
+                  ? const Center(child: CircularProgressIndicator())
                   : AppButton.primary(
                       text: "Verify OTP",
                       onPressed: () async {
                         if (otp.isEmpty || otp.length < 6) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content:
                                   Text("Please enter a valid 6-digit OTP."),
                             ),

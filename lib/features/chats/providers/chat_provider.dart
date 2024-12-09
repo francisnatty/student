@@ -20,7 +20,7 @@ class ChatProvider with ChangeNotifier {
   List<ConversationData> _conversationData = [];
   List<ConversationData> get conversationData => _conversationData;
 
-  String? _messageId = '';
+  final String _messageId = '';
   String? get messageId => _messageId;
 
 

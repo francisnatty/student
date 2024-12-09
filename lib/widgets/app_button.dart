@@ -16,7 +16,7 @@ class AppButton extends StatelessWidget {
 
   // Primary Button Constructor
   AppButton.primary({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
     this.isActive = true,
@@ -29,12 +29,11 @@ class AppButton extends StatelessWidget {
   })  : fontSize = fontSize ?? 16.sp,
         height = height ?? 64.h,
         width = width ?? double.infinity,
-        borderColor = Colors.transparent,
-        super(key: key);
+        borderColor = Colors.transparent;
 
   // Secondary Button Constructor
   AppButton.secondary({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
     this.isActive = true,
@@ -47,8 +46,7 @@ class AppButton extends StatelessWidget {
     double? width,
   })  : fontSize = fontSize ?? 16.sp,
         height = height ?? 64.h,
-        width = width ?? double.infinity,
-        super(key: key);
+        width = width ?? double.infinity;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +56,7 @@ class AppButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isActive && !isLoading ? onPressed : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: isActive ? backgroundColor : Color(0xffcfdafe),
+          backgroundColor: isActive ? backgroundColor : const Color(0xffcfdafe),
           side: BorderSide(color: borderColor),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(64.r),
