@@ -23,43 +23,64 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ) {
     on<GetFeeds>(_fetchFeeds);
     on<GetStatus>(_fetchStatus);
+    on<ToggleLike>(_toggleLike);
   }
 
-  // Future<void> _toggleLike(ToggleLike event, Emitter<HomeState> emit) async {
-  //   final currentPosts = state.posts;
+  Future<void> _toggleLike(ToggleLike event, Emitter<HomeState> emit) async {
+    print('toggle like');
+    var loginResponse = await localStorage.getLoginResponse();
+    final userId = loginResponse!.id.toString();
 
-  //   final updatedPosts = currentPosts!.data!.map((post) {
-  //     if (post.id == event.postId) {
-  //       //toggle isLiked
-  //       final alreadyLiked = post.likeOnFeeds
-  //               ?.any((like) => like.feedLike.toString() == event.userId) ??
-  //           false;
-  //       post.isLiked = !alreadyLiked;
-  //     }
-  //     return post;
-  //   }).toList();
+    final currentPosts = state.posts;
 
-  //   emit(state.copyWith(
-  //     posts: PostModel(
-  //       data: updatedPosts,
-  //     ),
-  //   ));
-  // }
+    final updatedPosts = currentPosts!.data.map((post) {
+      if (post.id == event.postId) {
+        // Toggle isLiked
+        post.isLiked = !post.isLiked;
+
+        // Update totalFeedLikes
+        int currentLikes = int.tryParse(post.totalFeedLikes) ?? 0;
+        if (post.isLiked) {
+          currentLikes += 1;
+        } else {
+          currentLikes =
+              currentLikes > 0 ? currentLikes - 1 : 0; // Prevent negative likes
+        }
+        post.totalFeedLikes = currentLikes.toString();
+      }
+      return post;
+    }).toList();
+
+    emit(state.copyWith(
+      posts: PostModel(
+        data: updatedPosts,
+      ),
+    ));
+  }
 
   Future<void> _fetchFeeds(GetFeeds event, Emitter<HomeState> emit) async {
     emit(state.copyWith(status: HomeStatus.loading));
-    final result = await homeRepo.getPost();
-    result.fold((failure) {
-      emit(state.copyWith(status: HomeStatus.error, error: failure));
-    }, (posts) async {
-      // var loginResponse = await localStorage.getLoginResponse();
-      // if (loginResponse != null) {
-      //   for (var post in posts.data!) {
-      //     post.updateIsLiked(loginResponse.id.toString());
-      //   }
-      // }
 
-      emit(state.copyWith(status: HomeStatus.success, posts: posts));
+    final result = await homeRepo.getPost();
+    if (emit.isDone) return;
+
+    await result.fold((failure) async {
+      if (!emit.isDone) {
+        emit(state.copyWith(status: HomeStatus.error, error: failure));
+      }
+    }, (posts) async {
+      var loginResponse = await localStorage.getLoginResponse();
+      if (emit.isDone) return;
+
+      if (loginResponse != null) {
+        for (var post in posts.data) {
+          post.updateIsLiked(loginResponse.id.toString());
+        }
+      }
+
+      if (!emit.isDone) {
+        emit(state.copyWith(status: HomeStatus.success, posts: posts));
+      }
     });
   }
 

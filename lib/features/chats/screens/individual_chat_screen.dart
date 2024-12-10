@@ -1,26 +1,45 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:student_centric_app/config/routes/navigation_routes.dart';
+import 'package:student_centric_app/config/service_locator.dart';
+import 'package:student_centric_app/core/storage/local_storage.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
 import 'package:student_centric_app/features/auth/providers/auth_provider.dart';
+import 'package:student_centric_app/features/chats/bloc/chat_bloc.dart';
 import 'package:student_centric_app/features/chats/models/chat_user.dart';
+import 'package:student_centric_app/features/chats/models/get_chat_history.dart';
 import 'package:student_centric_app/features/chats/providers/chat_provider.dart';
 import 'package:student_centric_app/features/chats/screens/audio_call_screen.dart';
 import 'package:student_centric_app/features/chats/screens/video_call_screen.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../core/utils/bottom_sheets.dart';
 import '../module/chat_option.dart';
 
-class IndividualChatScreen extends StatelessWidget {
-  final ChatUser chatUser;
+class IndividualChatScreen extends StatefulWidget {
+  final User chatUser;
   const IndividualChatScreen({
     super.key,
     required this.chatUser,
   });
+
+  @override
+  State<IndividualChatScreen> createState() => _IndividualChatScreenState();
+}
+
+class _IndividualChatScreenState extends State<IndividualChatScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ChatBloc>().add(
+          GetConversationEvent(messageId: '12_45'),
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +62,7 @@ class IndividualChatScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    chatUser.firstName ?? chatUser.email,
+                    widget.chatUser.firstName ?? widget.chatUser.email,
                     style: const TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -82,8 +101,9 @@ class IndividualChatScreen extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (context) => AudioCallScreen(
-                      receiverName: "${chatUser.firstName} ${chatUser.lastName}",
-                      personToCallId: chatUser.id.toString(),
+                      receiverName:
+                          "${widget.chatUser.firstName} ${widget.chatUser.lastName}",
+                      personToCallId: widget.chatUser.id.toString(),
                     ),
                   ),
                 );
@@ -96,7 +116,7 @@ class IndividualChatScreen extends StatelessWidget {
               ),
               onPressed: () {
                 context.push(VideoCallScreen(
-                  personToCallId: chatUser.id.toString(),
+                  personToCallId: widget.chatUser.id.toString(),
                 ));
               },
             ),
@@ -115,68 +135,86 @@ class IndividualChatScreen extends StatelessWidget {
           ],
         ),
         body: ChatBody(
-          chatUser: chatUser,
+          chatUser: widget.chatUser,
         ),
       ),
     );
   }
 }
 
-class ChatBody extends StatelessWidget {
+class ChatBody extends StatefulWidget {
   const ChatBody({super.key, required this.chatUser});
-  final ChatUser chatUser;
+  final User chatUser;
+
+  @override
+  State<ChatBody> createState() => _ChatBodyState();
+}
+
+class _ChatBodyState extends State<ChatBody> {
+  late String senderId = '';
+  @override
+  void initState() {
+    super.initState();
+    _getSenderId();
+  }
+
+  _getSenderId() async {
+    final localStorage = Di.getIt<LocalStorage>();
+    final loginResponse = await localStorage.getLoginResponse();
+    setState(() {
+      senderId = loginResponse!.id.toString() ?? '';
+    });
+    // debugPrint("sender id is => ${authProvider?.id.toString() ?? ''}");
+  }
 
   @override
   Widget build(BuildContext context) {
-    var authProvider = Provider.of<AuthProvider>(context, listen: false).user;
-    String senderId = authProvider?.id.toString() ?? '0';
-    debugPrint("sender id is => ${authProvider?.id.toString() ?? ''}");
-    return Consumer<ChatProvider>(
-      builder: (BuildContext context, ChatProvider viewModel, Widget? child) {
-        if (viewModel.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (viewModel.errorMessage != null) {
-          return Center(
-            child: Text(
-              viewModel.chatErrorMessage!,
-              style: TextStyle(color: Colors.red, fontSize: 16.sp),
+    // var authProvider = Provider.of<AuthProvider>(context, listen: false).user;
+
+    return BlocConsumer<ChatBloc, ChatState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        if (state.conversation != null) {
+          final conversations = state.conversation!.data;
+          return Padding(
+            padding: const EdgeInsets.only(left: 10.0, right: 10),
+            child: Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.only(bottom: 4.h),
+                    itemCount: conversations.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ChatBubble(
+                        text: conversations[index].message,
+                        isSender: (senderId == conversations[index].senderId)
+                            ? true
+                            : false,
+                        time: timeago.format(DateTime.parse(
+                            conversations[index].createdAt ?? '')),
+                        backgroundColor: AppColors.primaryColor,
+                        textColor: Colors.white,
+                      );
+                    },
+                  ),
+                ),
+                MessageInputField(
+                  chatUser: widget.chatUser,
+                  senderId: senderId,
+                ),
+              ],
             ),
           );
         }
-        // else if (viewModel.conversationData.isEmpty) {
-        //   return Center(
-        //     child: Text(
-        //       'No chats available.',
-        //       style: TextStyle(fontSize: 16.sp),
-        //     ),
-        //   );
-        // }
-        return Padding(
-          padding: const EdgeInsets.only(left: 10.0, right: 10),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.only(bottom: 4.h),
-                  itemCount: viewModel.conversationData.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ChatBubble(
-                      text: viewModel.conversationData[index].message ?? '',
-                      isSender: (senderId ==
-                              viewModel.conversationData[index].senderId)
-                          ? true
-                          : false,
-                      time: '20:54',
-                      backgroundColor: AppColors.primaryColor,
-                      textColor: Colors.white,
-                    );
-                  },
-                ),
-              ),
-              MessageInputField(
-                chatUser: chatUser,
-              ),
-            ],
+
+        return Center(
+          child: SizedBox(
+            height: 20.h,
+            width: 20.w,
+            child: const CircularProgressIndicator(
+              color: AppColors.primaryColor,
+              strokeWidth: 1.8,
+            ),
           ),
         );
       },
@@ -328,8 +366,10 @@ class ChatImageBubble extends StatelessWidget {
 }
 
 class MessageInputField extends StatelessWidget {
-  const MessageInputField({super.key, required this.chatUser});
-  final ChatUser chatUser;
+  final String senderId;
+  const MessageInputField(
+      {super.key, required this.chatUser, required this.senderId});
+  final User chatUser;
 
   @override
   Widget build(BuildContext context) {
@@ -340,7 +380,7 @@ class MessageInputField extends StatelessWidget {
       builder: (BuildContext context, ChatProvider viewModel, _) {
         return Container(
           padding: const EdgeInsets.all(8),
-          margin: EdgeInsets.symmetric(horizontal: 30.w),
+          margin: EdgeInsets.symmetric(horizontal: 20.w),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(
@@ -373,7 +413,7 @@ class MessageInputField extends StatelessWidget {
               GestureDetector(
                 onTap: () async {
                   await viewModel.sendMessage(
-                      senderId: authProvider?.id.toString() ?? '',
+                      senderId: senderId,
                       receiverId: chatUser.id.toString(),
                       content: message.text,
                       context: context,
@@ -391,6 +431,18 @@ class MessageInputField extends StatelessWidget {
                         AppAssets.attachmentIcon,
                         height: 30.h,
                       ),
+              ),
+
+              InkWell(
+                onTap: () async {
+                  await viewModel.sendMessage(
+                      senderId: authProvider?.id.toString() ?? '',
+                      receiverId: chatUser.id.toString(),
+                      content: message.text,
+                      context: context,
+                      messageId: "${authProvider?.id}_${chatUser.id}");
+                },
+                child: const Icon(Icons.send),
               )
             ],
           ),

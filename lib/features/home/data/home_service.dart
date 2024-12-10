@@ -93,6 +93,7 @@ class HomeServiceImpl extends HomeService {
           'https://typescript-boilerplate.onrender.com/api/v1/datas/home/postToFeed',
           data: params.toFormData(),
           options: Options(headers: {
+            'Content-Type': 'multipart/form-data',
             'Authorization': 'Bearer $token',
           }));
       return ApiResponse(

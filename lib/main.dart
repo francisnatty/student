@@ -13,6 +13,7 @@ import 'package:student_centric_app/core/utils/banners.dart';
 import 'package:student_centric_app/core/utils/fcm.dart';
 import 'package:student_centric_app/features/auth/providers/auth_provider.dart';
 import 'package:student_centric_app/features/auth/providers/basic_information_provider.dart';
+import 'package:student_centric_app/features/chats/bloc/chat_bloc.dart';
 import 'package:student_centric_app/features/chats/providers/call_provider.dart';
 import 'package:student_centric_app/features/chats/providers/chat_provider.dart';
 import 'package:student_centric_app/features/dashboard/providers/bottom_nav_provider.dart';
@@ -135,9 +136,8 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider(
-              create: (context) => getIt<HomeBloc>(),
-            ),
+            BlocProvider(create: (context) => getIt<HomeBloc>()),
+            BlocProvider(create: (context) => getIt<ChatBloc>())
           ],
           child: MaterialApp(
             title: 'Flutter Demo',
@@ -157,7 +157,9 @@ class MyApp extends StatelessWidget {
         );
       },
       child: const DashboardScreen(),
+      // child: const UploadProfilePictureScreen(),
       // child: const OnboardingScreen(),
+      // child: const TestScreen(),
     );
   }
 }

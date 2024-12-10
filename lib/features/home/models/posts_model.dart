@@ -1,241 +1,183 @@
 class PostModel {
-  List<Post>? data;
-  bool? error;
+  final List<Post> data;
 
-  PostModel({this.data, this.error});
+  PostModel({required this.data});
 
-  PostModel.fromJson(Map<String, dynamic> json) {
-    if (json['data'] != null) {
-      data = <Post>[];
-      for (var v in json['data']) {
-        data!.add(Post.fromJson(v));
-      }
-    }
-    error = json['error'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    if (this.data != null) {
-      data['data'] = this.data!.map((v) => v.toJson()).toList();
-    }
-    data['error'] = error;
-    return data;
+  factory PostModel.fromJson(Map<String, dynamic> json) {
+    return PostModel(
+      data: (json['data'] as List).map((item) => Post.fromJson(item)).toList(),
+    );
   }
 }
 
 class Post {
-  int? id;
-  String? postType;
-  String? userId;
-  String? title;
-  String? subtitle;
-  String? content;
-  String? longitude;
-  String? lagtitude;
-  String? pollTypeTitle;
-  String? pollAnswer;
-  String? link;
-  String? status;
-  String? createdAt;
-  String? updatedAt;
-  User? user;
-  List<FileUploads>? fileUploads;
-  List<CommentOnFeeds>? commentOnFeeds;
-  List<LikeOnFeeds>? likeOnFeeds;
-  bool? isLiked;
+  final int id;
+  final String postType;
+  final String userId;
+  final String title;
+  final String subtitle;
+  final String content;
+  final String? longitude;
+  final String? latitude;
+  final String? link;
+  final String? status;
+  final String createdAt;
+  final String updatedAt;
+  String totalFeedLikes;
+  final User user;
+  final Poll? poll;
+  final List<FileUpload> fileUploads;
+  final List<CommentOnFeed> comments;
+  final List<LikeOnFeed> likes;
+  bool isLiked;
 
   Post({
-    this.id,
-    this.postType,
-    this.userId,
-    this.title,
-    this.subtitle,
-    this.content,
+    required this.id,
+    required this.postType,
+    required this.userId,
+    required this.title,
+    required this.subtitle,
+    required this.content,
     this.longitude,
-    this.lagtitude,
-    this.pollTypeTitle,
-    this.pollAnswer,
+    this.latitude,
     this.link,
     this.status,
-    this.createdAt,
-    this.updatedAt,
-    this.user,
-    this.fileUploads,
-    this.commentOnFeeds,
-    this.likeOnFeeds,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.totalFeedLikes,
+    required this.user,
+    this.poll,
+    required this.fileUploads,
+    required this.comments,
+    required this.likes,
     this.isLiked = false,
   });
 
-  Post.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    postType = json['postType'];
-    userId = json['userId'];
-    title = json['title'];
-    subtitle = json['subtitle'];
-    content = json['content'];
-    longitude = json['longitude'];
-    lagtitude = json['lagtitude'];
-    pollTypeTitle = json['pollTypeTitle'];
-    pollAnswer = json['pollAnswer'];
-    link = json['link'];
-    status = json['status'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    user = json['User'] != null ? User.fromJson(json['User']) : null;
-    if (json['FileUploads'] != null) {
-      fileUploads = <FileUploads>[];
-      json['FileUploads'].forEach((v) {
-        fileUploads!.add(FileUploads.fromJson(v));
-      });
-    }
-    if (json['CommentOnFeeds'] != null) {
-      commentOnFeeds = <CommentOnFeeds>[];
-      json['CommentOnFeeds'].forEach((v) {
-        commentOnFeeds!.add(CommentOnFeeds.fromJson(v));
-      });
-    }
-    if (json['LikeOnFeeds'] != null) {
-      likeOnFeeds = <LikeOnFeeds>[];
-      json['LikeOnFeeds'].forEach((v) {
-        likeOnFeeds!.add(LikeOnFeeds.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['postType'] = postType;
-    data['userId'] = userId;
-    data['title'] = title;
-    data['subtitle'] = subtitle;
-    data['content'] = content;
-    data['longitude'] = longitude;
-    data['lagtitude'] = lagtitude;
-    data['pollTypeTitle'] = pollTypeTitle;
-    data['pollAnswer'] = pollAnswer;
-    data['link'] = link;
-    data['status'] = status;
-    data['created_at'] = createdAt;
-    data['updated_at'] = updatedAt;
-    if (user != null) {
-      data['User'] = user!.toJson();
-    }
-    if (fileUploads != null) {
-      data['FileUploads'] = fileUploads!.map((v) => v.toJson()).toList();
-    }
-    if (commentOnFeeds != null) {
-      data['CommentOnFeeds'] = commentOnFeeds!.map((v) => v.toJson()).toList();
-    }
-    if (likeOnFeeds != null) {
-      data['LikeOnFeeds'] = likeOnFeeds!.map((v) => v.toJson()).toList();
-    }
-    return data;
+  factory Post.fromJson(Map<String, dynamic> json) {
+    return Post(
+      id: json['id'],
+      postType: json['postType'],
+      userId: json['userId'],
+      title: json['title'],
+      subtitle: json['subtitle'],
+      content: json['content'],
+      longitude: json['longitude'],
+      latitude: json['lagtitude'], // Note the typo in "latitude"
+      link: json['link'],
+      status: json['status'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      totalFeedLikes: json['totalFeedLikes'],
+      user: User.fromJson(json['User']),
+      poll: json['Poll'] != null ? Poll.fromJson(json['Poll']) : null,
+      fileUploads: (json['FileUploads'] as List)
+          .map((item) => FileUpload.fromJson(item))
+          .toList(),
+      comments: (json['CommentOnFeeds'] as List)
+          .map((item) => CommentOnFeed.fromJson(item))
+          .toList(),
+      likes: (json['LikeOnFeeds'] as List)
+          .map((item) => LikeOnFeed.fromJson(item))
+          .toList(),
+    );
   }
 
   void updateIsLiked(String currentUserId) {
-    isLiked =
-        likeOnFeeds?.any((like) => like.feedLike.toString() == currentUserId) ??
-            false;
+    isLiked = likes.any((like) => like.userId.toString() == currentUserId);
   }
 }
 
 class User {
-  String? firstName;
-  String? lastName;
+  final String firstName;
+  final String lastName;
+  final String profileImage;
 
-  User({this.firstName, this.lastName});
+  User({
+    required this.firstName,
+    required this.lastName,
+    required this.profileImage,
+  });
 
-  User.fromJson(Map<String, dynamic> json) {
-    firstName = json['first_name'];
-    lastName = json['last_name'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['first_name'] = firstName;
-    data['last_name'] = lastName;
-    return data;
-  }
-}
-
-class FileUploads {
-  String? secureUrl;
-  String? normalUrl;
-  String? fileType;
-
-  FileUploads({this.secureUrl, this.normalUrl, this.fileType});
-
-  FileUploads.fromJson(Map<String, dynamic> json) {
-    secureUrl = json['secure_url'];
-    normalUrl = json['normal_url'];
-    fileType = json['file_type'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['secure_url'] = secureUrl;
-    data['normal_url'] = normalUrl;
-    data['file_type'] = fileType;
-    return data;
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+      profileImage: json['profile_image'],
+    );
   }
 }
 
-class CommentOnFeeds {
-  String? comment;
-  List<CommentLikeOnFeeds>? likeOnFeeds;
+class Poll {
+  // Define fields if Poll has a structure
+  Poll();
 
-  CommentOnFeeds({this.comment, this.likeOnFeeds});
-
-  CommentOnFeeds.fromJson(Map<String, dynamic> json) {
-    comment = json['comment'];
-    if (json['LikeOnFeeds'] != null) {
-      likeOnFeeds = <CommentLikeOnFeeds>[];
-      json['LikeOnFeeds'].forEach((v) {
-        likeOnFeeds!.add(CommentLikeOnFeeds.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['comment'] = comment;
-    if (likeOnFeeds != null) {
-      data['LikeOnFeeds'] = likeOnFeeds!.map((v) => v.toJson()).toList();
-    }
-    return data;
+  factory Poll.fromJson(Map<String, dynamic> json) {
+    // Implement parsing logic if Poll exists
+    return Poll();
   }
 }
 
-class CommentLikeOnFeeds {
-  int? commentLike;
+class FileUpload {
+  final int fileId;
+  final String secureUrl;
+  final String normalUrl;
+  final String fileType;
 
-  CommentLikeOnFeeds({this.commentLike});
+  FileUpload({
+    required this.fileId,
+    required this.secureUrl,
+    required this.normalUrl,
+    required this.fileType,
+  });
 
-  CommentLikeOnFeeds.fromJson(Map<String, dynamic> json) {
-    commentLike = json['commentLike'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['commentLike'] = commentLike;
-    return data;
+  factory FileUpload.fromJson(Map<String, dynamic> json) {
+    return FileUpload(
+      fileId: json['fileId'],
+      secureUrl: json['secure_url'],
+      normalUrl: json['normal_url'],
+      fileType: json['file_type'],
+    );
   }
 }
 
-class LikeOnFeeds {
-  int? feedLike;
+class CommentOnFeed {
+  final int id;
+  final String feedId;
+  final String comment;
+  final int? status;
+  final String? createdAt;
+  final String? updatedAt;
+  final String totalCommentLikes;
 
-  LikeOnFeeds({this.feedLike});
+  CommentOnFeed({
+    required this.id,
+    required this.feedId,
+    required this.comment,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+    required this.totalCommentLikes,
+  });
 
-  LikeOnFeeds.fromJson(Map<String, dynamic> json) {
-    feedLike = json['feedLike'];
+  factory CommentOnFeed.fromJson(Map<String, dynamic> json) {
+    return CommentOnFeed(
+      id: json['id'],
+      feedId: json['feedId'],
+      comment: json['comment'],
+      status: json['status'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      totalCommentLikes: json['totalCommentLikes'],
+    );
   }
+}
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['feedLike'] = feedLike;
-    return data;
+class LikeOnFeed {
+  final int userId;
+
+  LikeOnFeed({required this.userId});
+
+  factory LikeOnFeed.fromJson(Map<String, dynamic> json) {
+    return LikeOnFeed(userId: json['userId']);
   }
 }

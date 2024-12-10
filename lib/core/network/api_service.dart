@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
-import 'package:flutter/foundation.dart'; // For kDebugMode
+import 'package:flutter/foundation.dart';
+import 'package:student_centric_app/config/service_locator.dart';
+import 'package:student_centric_app/core/storage/local_storage.dart'; // For kDebugMode
 
 typedef OnSuccess = void Function(String message);
 typedef OnError = void Function(String message);
@@ -97,12 +99,12 @@ class ApiService {
 
   // Generic POST request
   Future<Response?> post(
-      String path, {
-        dynamic data,
-        bool isProtected = false,
-        bool isMultipart = false,
-        bool showBanner = true,
-      }) async {
+    String path, {
+    dynamic data,
+    bool isProtected = false,
+    bool isMultipart = false,
+    bool showBanner = true,
+  }) async {
     try {
       Options options = Options();
       if (isProtected) {
@@ -116,9 +118,8 @@ class ApiService {
       options.extra = {'showBanner': showBanner};
 
       // Avoid wrapping FormData again
-      final requestData = isMultipart && data is! FormData
-          ? FormData.fromMap(data)
-          : data;
+      final requestData =
+          isMultipart && data is! FormData ? FormData.fromMap(data) : data;
 
       Response response = await _dio.post(
         path,
@@ -132,7 +133,6 @@ class ApiService {
       return null;
     }
   }
-
 
   // Generic PATCH request
   Future<Response?> patch(
@@ -260,8 +260,10 @@ class ApiService {
   Future<Map<String, String>> _getAuthHeaders() async {
     // Implement your logic to retrieve the token
     //const FlutterSecureStorage _storage = FlutterSecureStorage();
-    const storage = FlutterSecureStorage();
-    String? token = await storage.read(key: 'access_token');
+    final storage = Di.getIt<LocalStorage>();
+    String? token = await storage.getAcessToken();
+    print('token from api service');
+    print(token);
 
     debugPrint("token is : $token");
 
@@ -400,9 +402,9 @@ class ApiService {
         } else if (error.type == DioExceptionType.receiveTimeout) {
           errorMessage = "Receive timed out";
         } else if (error.type == DioExceptionType.badResponse) {
-          debugPrint("derey here =>  ${error.response?.data['msg']??''}");
+          debugPrint("derey here =>  ${error.response?.data['msg'] ?? ''}");
           errorMessage = error.response?.data != null
-              ? "${error.response?.data['msg']??''}"
+              ? "${error.response?.data['msg'] ?? ''}"
               : "Bad response from server";
         } else if (error.type == DioExceptionType.cancel) {
           errorMessage = "Request was cancelled";

@@ -90,7 +90,7 @@ class DioClient implements ApiClient {
 
       return apiResponse;
     } catch (e) {
-      DebugLogger.log('DIO ERROR', e.toString());
+      DebugLogger.log('ERROR', e.toString());
       var err = CustomHandlerObject.getError(error: e);
       apiResponse = ApiResponse(
         success: false,

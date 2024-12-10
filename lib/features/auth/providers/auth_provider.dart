@@ -22,6 +22,8 @@ import 'package:student_centric_app/features/auth/widgets/otp_verification.dart'
 import 'package:student_centric_app/features/dashboard/screens/dashboard_screen.dart';
 
 import '../../../config/service_locator.dart';
+import '../../../core/api/api.dart';
+import '../../../core/utils/debug_logger.dart';
 
 class AuthProvider extends ChangeNotifier {
   // Variables to hold authentication state
@@ -320,9 +322,9 @@ class AuthProvider extends ChangeNotifier {
           (p0) => false,
         );
 
-        //   const FlutterSecureStorage _sstorage = FlutterSecureStorage();
+        //  const FlutterSecureStorage _storage = FlutterSecureStorage();
 
-        // await _sstorage.write(key: 'access_token', value: _accessToken);
+        //  await _storage.write(key: 'access_token', value: _accessToken);
         await _storage.saveAcessToken(_accessToken!);
         await _storage.saveLoginResponse(loginResponse);
 
@@ -455,41 +457,28 @@ class AuthProvider extends ChangeNotifier {
     required BuildContext context,
     bool showBanner = true,
   }) async {
-    // _isLoading = true;
-    // notifyListeners();
+    _isLoading = true;
+    notifyListeners();
 
     try {
       var dio = Dio();
 
-      // Read file as bytes
-      List<int> fileBytes = await profileImage.readAsBytes();
+      FormData data = FormData();
+      data.fields.add(MapEntry('email', email));
+      data.files.add(MapEntry(
+          'profileImage',
+          MultipartFile.fromFileSync(profileImage.path,
+              filename: profileImage.path.split('/').last)));
 
-      // Create MultipartFile from bytes
-      var filePart = MultipartFile.fromBytes(
-        fileBytes,
-        filename: profileImage.path.split('/').last,
-      );
-
-      // Create FormData
-      var formData = FormData.fromMap({
-        'email': 'samuelofgod@gmail.com',
-        'profileImage': filePart,
-      });
-
-      // Make the request
-      var response = await dio.patch(
+      var response = await dio.request(
         'https://typescript-boilerplate.onrender.com/api/v1/auth/onboarding/upload/user/profilePicture',
-        data: formData,
         options: Options(
-          contentType: 'multipart/form-data',
+          method: 'PATCH',
         ),
+        data: data,
       );
-
-      print('Response: ${response.data}');
-      print(response);
 
       if (response.statusCode == 200) {
-        // Handle successful upload
         context.push(
           SuccessScreen(
             onPressed: () {
@@ -500,9 +489,14 @@ class AuthProvider extends ChangeNotifier {
             },
           ),
         );
-      } else {}
+      }
     } catch (e) {
-      print(e);
+      DebugLogger.log('DIO ERROR', e.toString());
+      var err = CustomHandlerObject.getError(error: e);
+      final apiResponse = ApiResponse(
+        success: false,
+        failure: err,
+      );
     } finally {
       _isLoading = false;
       notifyListeners();

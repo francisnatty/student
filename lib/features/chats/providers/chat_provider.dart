@@ -1,6 +1,8 @@
 // lib/providers/chat_provider.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:student_centric_app/core/network/api_service.dart';
+import 'package:student_centric_app/features/chats/bloc/chat_bloc.dart';
 import 'package:student_centric_app/features/chats/models/chat_user.dart';
 import 'package:student_centric_app/features/chats/models/conversation_model.dart';
 
@@ -22,7 +24,6 @@ class ChatProvider with ChangeNotifier {
 
   final String _messageId = '';
   String? get messageId => _messageId;
-
 
   Future<void> fetchChats() async {
     _isLoading = true;
@@ -55,14 +56,14 @@ class ChatProvider with ChangeNotifier {
     }
   }
 
-
   Future<void> fetchConversation({required String messageId}) async {
     _isLoading = true;
     _chatErrorMessage = null;
     notifyListeners();
-     debugPrint("fetch conversation called $messageId");
+    debugPrint("fetch conversation called $messageId");
     try {
-      final response = await ApiService.instance.get("/datas/fetch/one_on_one/conversations/$messageId");
+      final response = await ApiService.instance
+          .get("/datas/fetch/one_on_one/conversations/$messageId");
       if (response != null &&
           response.statusCode == 200 &&
           response.data['error'] == false) {
@@ -86,17 +87,20 @@ class ChatProvider with ChangeNotifier {
     List<ConversationData> senderMessages = (json['data']['senderChat'] as List)
         .map((e) => ConversationData.fromJson(e))
         .toList();
-    List<ConversationData> receiverMessages = (json['data']['receiverChat'] as List)
-        .map((e) => ConversationData.fromJson(e))
-        .toList();
+    List<ConversationData> receiverMessages =
+        (json['data']['receiverChat'] as List)
+            .map((e) => ConversationData.fromJson(e))
+            .toList();
 
-    List<ConversationData> allMessages = [...senderMessages, ...receiverMessages];
+    List<ConversationData> allMessages = [
+      ...senderMessages,
+      ...receiverMessages
+    ];
     allMessages.sort((a, b) => a.createdAt!.compareTo(b.createdAt!));
     _conversationData = allMessages;
     notifyListeners();
     return allMessages;
   }
-
 
   Future<void> sendMessage({
     required String senderId,
@@ -112,10 +116,8 @@ class ChatProvider with ChangeNotifier {
     debugPrint("message id is => $messageId");
 
     final data = {
-      "messageId": messageId,
       "receiverId": receiverId,
       "content": content,
-
     };
 
     final response = await ApiService.instance.post(
@@ -127,8 +129,10 @@ class ChatProvider with ChangeNotifier {
 
     _sendMessageLoading = false;
     if (response != null && response.statusCode == 200) {
-      fetchConversation(messageId: messageId);
+      // fetchConversation(messageId: messageId);
+
       notifyListeners();
+      context.read<ChatBloc>().add(GetConversationEvent(messageId: '12_45'));
     } else {
       // Handle error (e.g., show a snackbar or dialog)
       notifyListeners();

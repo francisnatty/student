@@ -39,8 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final postsProvider = Provider.of<PostsProvider>(context);
-    final posts = postsProvider.posts;
-    final isLoading = postsProvider.isFetching;
+    // final posts = postsProvider.posts;
+    // final isLoading = postsProvider.isFetching;
 
     return Scaffold(
       appBar: AppBar(
@@ -204,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: BlocBuilder<HomeBloc, HomeState>(
               builder: (context, state) {
                 if (state.status == HomeStatus.error && state.posts == null) {
-                  return Text(state.error!.message);
+                  return Center(child: Text(state.error!.message));
                 } else if (state.status == HomeStatus.loading &&
                     state.posts == null) {
                   return Skeletonizer(
@@ -226,13 +226,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             userName: 'Mock data',
                             timeAgo: 'Mock Time',
                             postContent: 'Mock Content',
+                            ispostLiked: true,
                           );
                         },
                       ));
                 } else if (state.posts != null) {
                   final posts = state.posts!.data;
                   return ListView.separated(
-                      itemCount: posts!.length,
+                      itemCount: posts.length,
                       separatorBuilder: (context, index) {
                         return SizedBox(
                           height: 15.h,
@@ -247,6 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               MaterialPageRoute(
                                 builder: (_) => FeedDetails(
                                   post: post,
+                                  index: index,
                                 ),
                               ),
                             );
@@ -270,14 +272,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                     .map((e) => e.normalUrl ?? '')
                                     .toList() ??
                                 [],
-                            pollTypeTitle: post.pollTypeTitle,
-                            pollAnswers: post.pollAnswer?.split(","),
+                            // pollTypeTitle: '',
+                            // pollAnswers: [''],
                             voiceNoteUrl: null,
+                            ispostLiked: true,
                           ),
                         ).padHorizontal;
                       });
                 }
-                return const CircularProgressIndicator();
+                return Center(
+                    child: SizedBox(
+                        height: 20.h,
+                        width: 20.w,
+                        child: const CircularProgressIndicator(
+                          color: AppColors.primaryColor,
+                        )));
               },
             ),
           ),

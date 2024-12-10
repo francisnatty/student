@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:student_centric_app/core/extensions/account_extension.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
+import 'package:student_centric_app/features/home/models/create_feeds_params.dart';
 import 'package:student_centric_app/features/home/providers/post_provider.dart';
 import 'package:student_centric_app/widgets/app_button.dart';
 import 'package:student_centric_app/widgets/padding_widget.dart';
@@ -62,6 +64,17 @@ class _AddPostScreenState extends State<AddPostScreen> {
     }
   }
 
+  // Future<void> _pickAudio() async{
+  //    FilePickerResult? result = await FilePicker.platform.pickFiles(
+  //       type: FileType.audio, // Restrict to audio files
+  //     );
+
+  //     if (result != null && result.files.single.path != null) {
+  //       setState(() {
+  //         _selectedVoiceNote = File(result.files.single.path!);
+  //       });
+  // }
+
   Future<void> _postToFeed() async {
     final postsProvider = Provider.of<PostsProvider>(context, listen: false);
     debugPrint("selected post Type => $selectedIndex");
@@ -87,6 +100,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
           ? '${_pollChoice1Controller.text},${_pollChoice2Controller.text}'
           : null,
       voiceNoteUrl: _selectedVoiceNote,
+    );
+
+//create post params
+    final createpostParams = CreateFeedsParams(
+      postType: (selectedIndex == 0)
+          ? PostTypeEnums.feed.name
+          : (selectedIndex == 1)
+              ? PostTypeEnums.community.name
+              : PostTypeEnums.status.name,
+      content: _contentController.text,
     );
 
     if (postsProvider.postErrorMessage != null) {
@@ -184,33 +207,38 @@ class _AddPostScreenState extends State<AddPostScreen> {
               ),
             ),
             10.verticalSpace,
-            (selectedIndex == 0) ? Row(
-              children: [
-                CircleAvatar(
-                  radius: 24.r,
-                  child: SvgPicture.asset(
-                    AppAssets.profileIcon,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  "${context.account.user!.firstName} ${context.account.user!.lastName}",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ):Container(),
+            (selectedIndex == 0)
+                ? Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 24.r,
+                        child: SvgPicture.asset(
+                          AppAssets.profileIcon,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+
+                      //user name
+                      // Text(
+                      //   "${context.account.user!.firstName} ${context.account.user!.lastName}",
+                      //   style: const TextStyle(
+                      //     fontSize: 16,
+                      //     fontWeight: FontWeight.bold,
+                      //   ),
+                      // ),
+                    ],
+                  )
+                : Container(),
             const SizedBox(height: 16),
             (selectedIndex == 0) ? _postToFeedWidget() : _postToStatusWidget(),
             const SizedBox(height: 32),
-            (selectedIndex == 0) ? AppButton.primary(
-              text: "Post",
-              onPressed: isPosting ? null : _postToFeed,
-              isLoading: isPosting,
-            ):
-            Container()
+            (selectedIndex == 0)
+                ? AppButton.primary(
+                    text: "Post",
+                    onPressed: isPosting ? null : _postToFeed,
+                    isLoading: isPosting,
+                  )
+                : Container()
           ],
         ).padHorizontal,
       ),

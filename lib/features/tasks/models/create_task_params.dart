@@ -31,23 +31,32 @@ class CreateTaskParams {
   });
 
   Future<FormData> toFormData() async {
-    return FormData.fromMap({
-      'files': await Future.wait(
-        files.map(
-          (file) async => await MultipartFile.fromFile(file.path,
+    FormData data = FormData();
+
+    // Add fields
+    data.fields.add(MapEntry('user_id', userId));
+    data.fields.add(MapEntry('title', title));
+    data.fields.add(MapEntry('startTime', startTime));
+    data.fields.add(MapEntry('endTime', endTime));
+    data.fields.add(MapEntry('timeZone', timeZone));
+    data.fields
+        .add(MapEntry('videoConferencing', videoConferencing.toString()));
+    data.fields.add(MapEntry('location', location));
+    data.fields.add(MapEntry('description', description));
+    data.fields.add(MapEntry('participants', participants.toString()));
+    data.fields.add(MapEntry('repeat', repeat.toString()));
+
+    // Add files
+    for (final file in files) {
+      data.files.add(
+        MapEntry(
+          'attachments',
+          await MultipartFile.fromFile(file.path,
               filename: file.path.split('/').last),
         ),
-      ),
-      'user_id': userId,
-      'title': title.trim(),
-      'startTime': startTime.trim(),
-      'endTime': endTime.trim(),
-      'timeZone': timeZone.trim(),
-      'videoConferencing': videoConferencing.toString(),
-      'location': location.trim(),
-      'description': description.trim(),
-      'participants': participants,
-      'repeat': repeat.toString(),
-    });
+      );
+    }
+
+    return data;
   }
 }

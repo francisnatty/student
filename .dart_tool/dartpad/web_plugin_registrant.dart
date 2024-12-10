@@ -8,6 +8,7 @@
 
 import 'package:agora_rtc_engine/agora_rtc_engine_web.dart';
 import 'package:awesome_notifications/awesome_notifications_web.dart';
+import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:firebase_core_web/firebase_core_web.dart';
 import 'package:firebase_messaging_web/firebase_messaging_web.dart';
 import 'package:flutter_secure_storage_web/flutter_secure_storage_web.dart';
@@ -22,6 +23,7 @@ void registerPlugins([final Registrar? pluginRegistrar]) {
   final Registrar registrar = pluginRegistrar ?? webPluginRegistrar;
   AgoraRtcEngineWeb.registerWith(registrar);
   AwesomeNotificationsWeb.registerWith(registrar);
+  FilePickerWeb.registerWith(registrar);
   FirebaseCoreWeb.registerWith(registrar);
   FirebaseMessagingWeb.registerWith(registrar);
   FlutterSecureStorageWeb.registerWith(registrar);

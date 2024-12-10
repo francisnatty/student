@@ -29,6 +29,7 @@ class TaskServiceImpl extends TaskService {
           'https://typescript-boilerplate.onrender.com/api/v1/task/create-task',
           data: params.toFormData(),
           options: Options(headers: {
+            'Content-Type': 'multipart/form-data',
             'Authorization': 'Bearer $token',
           }));
 

@@ -1,5 +1,6 @@
 // lib/features/chats/screens/chat_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 // Removed the SVG import since it's no longer needed for the avatar
@@ -18,6 +19,7 @@ import 'package:student_centric_app/widgets/app_textfield.dart';
 
 import '../../../core/utils/bottom_sheets.dart';
 import '../../auth/providers/auth_provider.dart';
+import '../bloc/chat_bloc.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -33,7 +35,8 @@ class _ChatScreenState extends State<ChatScreen> {
     // Fetch chats when the screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HomeBloc>().add(GetStatus());
-      // Provider.of<ChatProvider>(context, listen: false).fetchChats();
+      context.read<ChatBloc>().add(GetChatHistoryEvent());
+      Provider.of<ChatProvider>(context, listen: false).fetchChats();
     });
   }
 
@@ -91,73 +94,121 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
             SizedBox(height: 16.h),
-
-            // Chat list
             Expanded(
-              child: Consumer<ChatProvider>(
-                builder: (context, chatProvider, child) {
-                  // if (chatProvider.isLoading) {
-                  //   return const Center(child: CircularProgressIndicator());
+              child: BlocBuilder<ChatBloc, ChatState>(
+                builder: (context, state) {
+                  // if (state is SubjectFailed) {
+                  //   return ErrorOutput(message: state.message);
                   // }
-                  if (chatProvider.errorMessage != null) {
-                    return Center(
-                      child: Text(
-                        chatProvider.errorMessage!,
-                        style: TextStyle(color: Colors.red, fontSize: 16.sp),
-                      ),
-                    );
-                  } else if (chatProvider.chats.isEmpty) {
-                    return Center(
-                      child: Text(
-                        'No chats available.',
-                        style: TextStyle(fontSize: 16.sp),
-                      ),
-                    );
-                  } else {
-                    return Skeletonizer(
-                      enabled: chatProvider.isLoading,
-                      ignoreContainers: true,
-                      child: ListView.builder(
-                        itemCount: chatProvider.chats.length,
+                  if (state.chats != null) {
+                    final chats = state.chats!.data;
+                    return ListView.separated(
+                        itemCount: chats.length,
+                        separatorBuilder: (context, index) {
+                          return SizedBox(
+                            height: 15.h,
+                          );
+                        },
                         itemBuilder: (context, index) {
-                          final ChatUser chatUser = chatProvider.chats[index];
-                          return GestureDetector(
+                          final chat = chats[index];
+                          return InkWell(
                             onTap: () {
-                              var authProvider = Provider.of<AuthProvider>(
-                                      context,
-                                      listen: false)
-                                  .user;
-                              var receiverId = chatUser.id;
-                              print("receiver id => $receiverId");
-                              int senderId = authProvider?.id ?? 0;
-                              Provider.of<ChatProvider>(context, listen: false)
-                                  .fetchConversation(
-                                      messageId: "${senderId}_${chatUser.id}");
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => IndividualChatScreen(
-                                    chatUser: chatUser,
+                                    chatUser: chat.user,
                                   ),
                                 ),
                               );
                             },
                             child: ChatListTile(
-                              name: _getUserName(chatUser),
-                              message:
-                                  "Hello!", // Placeholder, replace with actual data
-                              time:
-                                  "Now", // Placeholder, replace with actual data
-                              // Removed imageUrl since we're not using it
+                              name:
+                                  '${chat.user.firstName} ${chat.user.lastName}',
+                              message: chat.lastMessage.message,
+                              time: "Now",
                             ),
                           );
-                        },
-                      ),
-                    );
+                        });
                   }
+                  return SizedBox(
+                    height: 20.h,
+                    width: 20.w,
+                    child: const CircularProgressIndicator(
+                      color: AppColors.primaryColor,
+                      strokeWidth: 1.8,
+                    ),
+                  );
                 },
               ),
             ),
+
+            // Chat list
+            // Expanded(
+            //   child: Consumer<ChatProvider>(
+            //     builder: (context, chatProvider, child) {
+            //       // if (chatProvider.isLoading) {
+            //       //   return const Center(child: CircularProgressIndicator());
+            //       // }
+            //       if (chatProvider.errorMessage != null) {
+            //         return Center(
+            //           child: Text(
+            //             chatProvider.errorMessage!,
+            //             style: TextStyle(color: Colors.red, fontSize: 16.sp),
+            //           ),
+            //         );
+            //       } else if (chatProvider.chats.isEmpty) {
+            //         return Center(
+            //           child: Text(
+            //             'No chats available.',
+            //             style: TextStyle(fontSize: 16.sp),
+            //           ),
+            //         );
+            //       } else {
+            //         return Skeletonizer(
+            //           enabled: chatProvider.isLoading,
+            //           ignoreContainers: true,
+            //           child: ListView.builder(
+            //             itemCount: chatProvider.chats.length,
+            //             itemBuilder: (context, index) {
+            //               final ChatUser chatUser = chatProvider.chats[index];
+            //               return GestureDetector(
+            //                 onTap: () {
+            //                   var authProvider = Provider.of<AuthProvider>(
+            //                           context,
+            //                           listen: false)
+            //                       .user;
+            //                   var receiverId = chatUser.id;
+            //                   print("receiver id => $receiverId");
+            //                   int senderId = authProvider?.id ?? 0;
+            //                   Provider.of<ChatProvider>(context, listen: false)
+            //                       .fetchConversation(
+            //                           messageId: "${senderId}_${chatUser.id}");
+            //                   Navigator.push(
+            //                     context,
+            //                     MaterialPageRoute(
+            //                       builder: (_) => IndividualChatScreen(
+            //                         chatUser: chatUser,
+            //                       ),
+            //                     ),
+            //                   );
+            //                 },
+            //                 child: ChatListTile(
+            //                   name: _getUserName(chatUser),
+            //                   message:
+            //                       "Hello!", // Placeholder, replace with actual data
+            //                   time:
+            //                       "Now", // Placeholder, replace with actual data
+            //                   // Removed imageUrl since we're not using it
+            //                 ),
+            //               );
+            //             },
+            //           ),
+            //         );
+            //       }
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),

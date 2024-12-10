@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:student_centric_app/core/utils/app_assets.dart';
 import 'package:student_centric_app/core/utils/app_colors.dart';
+import 'package:student_centric_app/features/home/bloc/home_bloc.dart';
 import 'package:student_centric_app/features/home/providers/post_provider.dart';
 import 'package:video_player/video_player.dart';
+
+import '../models/posts_model.dart';
 
 class FeedDetailContainer extends StatelessWidget {
   final String userName;
@@ -18,24 +22,28 @@ class FeedDetailContainer extends StatelessWidget {
   final String? voiceNoteUrl;
   final String? likeCount;
   final int? feedId;
+  final Post post;
+  final int index;
 
-  const FeedDetailContainer({
-    super.key,
-    required this.feedId,
-    required this.userName,
-    required this.timeAgo,
-    required this.postContent,
-    this.images = const [],
-    this.videos = const [],
-    this.pollTypeTitle,
-    this.pollAnswers,
-    this.voiceNoteUrl,
-    this.likeCount,
-  });
+  const FeedDetailContainer(
+      {super.key,
+      required this.feedId,
+      required this.userName,
+      required this.timeAgo,
+      required this.postContent,
+      this.images = const [],
+      this.videos = const [],
+      this.pollTypeTitle,
+      this.pollAnswers,
+      this.voiceNoteUrl,
+      this.likeCount,
+      required this.index,
+      required this.post});
 
   @override
   Widget build(BuildContext context) {
     // Combine images and videos into a single list for the carousel
+    final postProvider = Provider.of<PostsProvider>(context);
     final mediaItems = [...images];
     final bool hasMultipleMedia = mediaItems.length > 1;
 
@@ -91,113 +99,102 @@ class FeedDetailContainer extends StatelessWidget {
           // Media: Images and Videos with Page Indicator
           if (mediaItems.isNotEmpty) MediaCarousel(mediaItems: mediaItems),
           // Poll Section
-          if (pollTypeTitle != null && pollAnswers != null)
-            Padding(
-              padding: EdgeInsets.only(top: 14.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    pollTypeTitle!,
-                    style:
-                        TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8.h),
-                  ...pollAnswers!.map((answer) => Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4.h),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.radio_button_unchecked,
-                              size: 16.sp,
-                              color: Colors.blue,
-                            ),
-                            SizedBox(width: 8.w),
-                            Expanded(
-                              child: Text(
-                                answer,
-                                style: TextStyle(fontSize: 14.sp),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )),
-                ],
-              ),
-            ),
+          // if (pollTypeTitle != null && pollAnswers != null)
+          //   Padding(
+          //     padding: EdgeInsets.only(top: 14.h),
+          //     child: Column(
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         Text(
+          //           pollTypeTitle!,
+          //           style:
+          //               TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+          //         ),
+          //         SizedBox(height: 8.h),
+          //         ...pollAnswers!.map((answer) => Padding(
+          //               padding: EdgeInsets.symmetric(vertical: 4.h),
+          //               child: Row(
+          //                 children: [
+          //                   Icon(
+          //                     Icons.radio_button_unchecked,
+          //                     size: 16.sp,
+          //                     color: Colors.blue,
+          //                   ),
+          //                   SizedBox(width: 8.w),
+          //                   Expanded(
+          //                     child: Text(
+          //                       answer,
+          //                       style: TextStyle(fontSize: 14.sp),
+          //                     ),
+          //                   ),
+          //                 ],
+          //               ),
+          //             )),
+          //       ],
+          //     ),
+          //   ),
 
           // Voice Note Section
-          if (voiceNoteUrl != null)
-            Padding(
-              padding: EdgeInsets.only(top: 14.h),
-              child: Row(
-                children: [
-                  Icon(Icons.mic, color: Colors.grey, size: 20.sp),
-                  SizedBox(width: 8.w),
-                  Text(
-                    "Voice Note Available",
-                    style:
-                        TextStyle(fontSize: 14.sp, color: Colors.grey.shade700),
-                  ),
-                ],
-              ),
-            ),
+          // if (voiceNoteUrl != null)
+          //   Padding(
+          //     padding: EdgeInsets.only(top: 14.h),
+          //     child: Row(
+          //       children: [
+          //         Icon(Icons.mic, color: Colors.grey, size: 20.sp),
+          //         SizedBox(width: 8.w),
+          //         Text(
+          //           "Voice Note Available",
+          //           style:
+          //               TextStyle(fontSize: 14.sp, color: Colors.grey.shade700),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
           // Interaction Row
           SizedBox(height: 10.h),
-          Consumer<PostsProvider>(
-            builder: (BuildContext context, PostsProvider viewModel, _) {
-              return Row(
-                children: [
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          //here likeButton
-                          debugPrint("like clicked====>");
-                          await viewModel.likeFeed(
-                            feedId: feedId.toString() ?? '',
-                            context: context,
-                          );
-                        },
-                        child: (viewModel.isLike)
-                            ? SvgPicture.asset(
-                                color: AppColors.primaryColor,
-                                AppAssets.likeIcon,
-                                height: 20.h,
-                                width: 20.w,
-                              )
-                            : SvgPicture.asset(
-                                AppAssets.likeIcon,
-                                height: 20.h,
-                                width: 20.w,
-                              ),
-                      ),
-                      SizedBox(width: 6.w),
-                      Text(
-                        "0",
-                        style: TextStyle(fontSize: 14.sp),
-                      ),
-                    ],
-                  ),
-                  SizedBox(width: 24.w),
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        AppAssets.messageIcon,
-                        height: 20.h,
-                        width: 20.w,
-                      ),
-                      SizedBox(width: 6.w),
-                      Text(
-                        likeCount ?? '',
-                        style: TextStyle(fontSize: 14.sp),
-                      ),
-                    ],
-                  ),
-                ],
+          BlocBuilder<HomeBloc, HomeState>(
+            builder: (context, state) {
+              //final post = state.posts.data.firstWhere((p) => p.id == postId);
+
+              if (state.posts != null) {
+                final posts = state.posts!.data;
+                final post = posts[index];
+                return Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        // print("Post ID: ${post.id}, isLiked: ${post.isLiked}");
+                        context
+                            .read<HomeBloc>()
+                            .add(ToggleLike(postId: post.id));
+                        postProvider.likeFeed(
+                            feedId: post.id.toString(), context: context);
+                      },
+                      child: post.isLiked
+                          ? SvgPicture.asset(
+                              color: AppColors.primaryColor,
+                              AppAssets.likeIcon,
+                              height: 20.h,
+                              width: 20.w,
+                            )
+                          : SvgPicture.asset(
+                              AppAssets.likeIcon,
+                              height: 20.h,
+                              width: 20.w,
+                            ),
+                    ),
+                    SizedBox(width: 6.w),
+                    Text(
+                      post.totalFeedLikes,
+                    )
+                  ],
+                );
+              }
+              return const CircularProgressIndicator(
+                color: AppColors.primaryColor,
               );
             },
-          )
+          ),
         ],
       ),
     );

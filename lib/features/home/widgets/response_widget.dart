@@ -7,14 +7,17 @@ import '../models/posts_model.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ResponseWidget extends StatelessWidget {
-  const ResponseWidget(
-      {super.key,
-      required this.post,
-      required this.fName,
-      required this.lName,
-      required this.time,
-      required this.feedLikes});
-  final CommentOnFeeds post;
+  const ResponseWidget({
+    super.key,
+    required this.post,
+    required this.fName,
+    required this.lName,
+    required this.time,
+    required this.feedLikes,
+    required this.postNum,
+  });
+  final Post post;
+  final String postNum;
   final String fName;
   final String lName;
   final String time;
@@ -63,13 +66,13 @@ class ResponseWidget extends StatelessWidget {
           ),
           SizedBox(height: 14.h),
           // Post Content
-          Text(
-            post.comment ?? "",
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: Colors.black,
-            ),
-          ),
+          // Text(
+          //   post.comment ?? "",
+          //   style: TextStyle(
+          //     fontSize: 14.sp,
+          //     color: Colors.black,
+          //   ),
+          // ),
           SizedBox(height: 14.h),
           Row(
             children: [
@@ -81,12 +84,10 @@ class ResponseWidget extends StatelessWidget {
                     width: 20.w,
                   ),
                   SizedBox(width: 6.w),
-                  Text(
-                    (post.likeOnFeeds !=null && post.likeOnFeeds!.isNotEmpty )
-                        ? "${post.likeOnFeeds?.first.commentLike ?? 0}"
-                        : '0',
-                    style: TextStyle(fontSize: 14.sp),
-                  ),
+                  // Text(
+                  //   ,
+                  //   style: TextStyle(fontSize: 14.sp),
+                  // ),
                 ],
               ),
               SizedBox(width: 24.w),

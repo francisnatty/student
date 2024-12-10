@@ -15,6 +15,7 @@ class FeedPostsContainer extends StatelessWidget {
   final String? pollTypeTitle;
   final List<String>? pollAnswers;
   final String? voiceNoteUrl;
+  final bool ispostLiked;
 
   const FeedPostsContainer({
     super.key,
@@ -26,6 +27,7 @@ class FeedPostsContainer extends StatelessWidget {
     this.pollTypeTitle,
     this.pollAnswers,
     this.voiceNoteUrl,
+    required this.ispostLiked,
   });
 
   @override
@@ -152,11 +154,21 @@ class FeedPostsContainer extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  SvgPicture.asset(
-                    AppAssets.likeIcon,
-                    height: 20.h,
-                    width: 20.w,
-                  ),
+                  ispostLiked
+                      ? SvgPicture.asset(
+                          AppAssets.likeIcon,
+                          colorFilter: const ColorFilter.mode(
+                            AppColors.primaryColor,
+                            BlendMode.srcIn,
+                          ),
+                          height: 20.h,
+                          width: 20.w,
+                        )
+                      : SvgPicture.asset(
+                          AppAssets.likeIcon,
+                          height: 20.h,
+                          width: 20.w,
+                        ),
                   SizedBox(width: 6.w),
                   Text(
                     "Like",

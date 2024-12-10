@@ -14,10 +14,13 @@ class GetStatus extends HomeEvent {
 
 class ToggleLike extends HomeEvent {
   final int postId;
-  final String userId;
 
-  ToggleLike({required this.postId, required this.userId});
+  ToggleLike({
+    required this.postId,
+  });
 
   @override
-  List<Object> get props => [postId, userId];
+  List<Object> get props => [
+        postId,
+      ];
 }
